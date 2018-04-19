@@ -1,54 +1,48 @@
 <template>
   <div class="login-container">
-    <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <div class="title-container">
-        <h3 class="title">{{$t('login.title')}}</h3>
-        <lang-select class="set-language"></lang-select>
+
+    <div class="s-nav">
+      <div class="l-row">
+        <div class="logo">
+          <a href="http://simboss.com" class="logo__img">SIMBOSS</a>
+        </div>
       </div>
+    </div>
+
+    <div class="l-row"><h1 class="title title--user title--high">欢迎登录</h1></div>
+
+    <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
+      
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入手机号码 / 账户名" />
       </el-form-item>
-
+      
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password" />
+        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
-
-      <div class="tips">
-        <span>{{$t('login.username')}} : admin</span>
-        <span>{{$t('login.password')}} : {{$t('login.any')}}</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:18px;">{{$t('login.username')}} : editor</span>
-        <span>{{$t('login.password')}} : {{$t('login.any')}}</span>
-      </div>
-
-      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{$t('login.thirdparty')}}</el-button>
+      
+      <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">立即登录</el-button>
+   
+      <p class="sign__tip">
+        <span>没有账号?</span>
+        <a href="" class="sign__link sign__link--attention">立即注册 </a> 
+        <a href="" class="sign__link"> 忘记密码?</a>
+      </p>
+      <p class="sign__tip sign__tip--err" v-show="passVal">帐号不存在</p>
     </el-form>
-
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
-      {{$t('login.thirdpartyTips')}}
-      <br/>
-      <br/>
-      <br/>
-      <social-sign />
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
 
@@ -57,29 +51,30 @@ export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+      if (!value) {
+        callback(new Error('请输入用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+      if (!value) {
+        callback(new Error('请输入密码'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
+      passVal: false,
       loading: false,
       showDialog: false
     }
@@ -101,6 +96,7 @@ export default {
             this.$router.push({ path: '/' })
           }).catch(() => {
             this.loading = false
+            this.passVal = true
           })
         } else {
           console.log('error submit!!')
@@ -109,36 +105,14 @@ export default {
       })
     },
     afterQRScan() {
-      // const hash = window.location.hash.slice(1)
-      // const hashObj = getQueryObject(hash)
-      // const originUrl = window.location.origin
-      // history.replaceState({}, '', originUrl)
-      // const codeMap = {
-      //   wechat: 'code',
-      //   tencent: 'code'
-      // }
-      // const codeName = hashObj[codeMap[this.auth_type]]
-      // if (!codeName) {
-      //   alert('第三方登录失败')
-      // } else {
-      //   this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-      //     this.$router.push({ path: '/' })
-      //   })
-      // }
     }
-  },
-  created() {
-    // window.addEventListener('hashchange', this.afterQRScan)
-  },
-  destroyed() {
-    // window.removeEventListener('hashchange', this.afterQRScan)
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
 $bg:#2d3a4b;
-$light_gray:#eee;
+$light_gray:#1f2d3d;
 
 /* reset element-ui css */
 .login-container {
@@ -147,7 +121,7 @@ $light_gray:#eee;
     height: 47px;
     width: 85%;
     input {
-      background: transparent;
+      background: none;
       border: 0px;
       -webkit-appearance: none;
       border-radius: 0px;
@@ -161,8 +135,8 @@ $light_gray:#eee;
     }
   }
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid #bfcbd9;
+    background: none;
     border-radius: 5px;
     color: #454545;
   }
@@ -170,7 +144,7 @@ $light_gray:#eee;
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-$bg:#2d3a4b;
+$bg:#fff;
 $dark_gray:#889aa4;
 $light_gray:#eee;
 
@@ -179,6 +153,53 @@ $light_gray:#eee;
   height: 100%;
   width: 100%;
   background-color: $bg;
+  .s-nav {
+    width: 100%;
+    box-shadow: 0 2px 0 #eee;
+    padding-left: 50px;
+    overflow: hidden;
+    .l-row {
+      max-width: 1200px;
+      min-width: 1140px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .logo {
+      height: 70px;
+      display: inline-block;
+    }
+    .logo__img {
+      display: block;
+      font-size: 30px;
+      color: transparent;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      line-height: 70px;
+      background: url('https://www.simboss.com/images/logo.png') no-repeat left 45%;
+      background-size: 100% auto;
+    }
+    .title--high {
+      margin-bottom: 100px;
+    }
+    .title--user {
+      border-bottom: 3px solid #0095e2;
+      margin-bottom: 50px;
+    }
+    .title {
+      font-size: 27px;
+      color: #555;
+      padding: 25px 0 15px;
+      padding-left: 20px;
+    }
+  }
+  .l-row {
+    max-width: 1200px;
+    min-width: 1140px;
+    margin: 0 auto;
+    position: relative;
+  }
   .login-form {
     position: absolute;
     left: 0;
@@ -237,6 +258,25 @@ $light_gray:#eee;
     position: absolute;
     right: 35px;
     bottom: 28px;
+  }
+  .sign__tip {
+    padding-top: 15px;
+    font-size: 13px;
+    color: #555;
+  }
+  .sign__link {
+    padding-top: 15px;
+    display: inline-block;
+    font-size: 13px;
+    color: #555;
+    margin-right: 16px;
+  }
+  .sign__link--attention {
+    color: #20a0ff;
+  }
+  .sign__tip--err {
+    color: #f06161;
+    font-size: 14px;
   }
 }
 </style>
