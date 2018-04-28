@@ -4,7 +4,7 @@
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+require('echarts/theme/macarons')
 import { debounce } from '@/utils'
 
 export default {
@@ -20,11 +20,19 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    dataArray: {
+      type: Array
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    dataArray(val) {
+      this.initChart()
     }
   },
   mounted() {
@@ -46,35 +54,37 @@ export default {
   },
   methods: {
     initChart() {
+      const _data = this.dataArray
       this.chart = echarts.init(this.$el, 'macarons')
-
       this.chart.setOption({
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
+          formatter: '{b}'
         },
-        legend: {
-          left: 'center',
-          bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
-        },
-        calculable: true,
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '',
             type: 'pie',
-            roseType: 'radius',
-            radius: [15, 95],
-            center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
-            animationEasing: 'cubicInOut',
-            animationDuration: 2600
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+              normal: {
+                show: false
+              }
+            },
+            labelLine: {
+              normal: {
+                show: false
+              }
+            },
+            data:
+              [
+                { value: _data[0], name: '已激活' },
+                { value: _data[1], name: '已停卡' },
+                { value: _data[2], name: '库存' },
+                { value: _data[3], name: '测试期' },
+                { value: _data[4], name: '已消卡' }
+              ]
           }
         ]
       })

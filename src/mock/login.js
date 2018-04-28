@@ -1,7 +1,7 @@
 import { param2Obj } from '@/utils'
 
 const userMap = {
-  admin: {
+  'admin': {
     roles: ['admin'],
     token: 'admin',
     introduction: '我是超级管理员',

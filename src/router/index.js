@@ -38,7 +38,7 @@ export const constantRouterMap = [
     redirect: 'dashboard',
     children: [{
       path: 'dashboard',
-      component: _import('dashboard/index'),
+      component: _import('dashboard/home'),
       name: 'dashboard',
       meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
     }]
@@ -175,7 +175,8 @@ export const asyncRouterMap = [
     },
     children: [
       { path: 'create-form', component: _import('form/create'), name: 'createForm', meta: { title: 'createForm', icon: 'table' }},
-      { path: 'edit-form', component: _import('form/edit'), name: 'editForm', meta: { title: 'editForm', icon: 'table' }}
+      { path: 'set-system', component: _import('form/system'), name: 'systemSetting', meta: { title: 'systemSetting', icon: 'table' }},
+      { path: 'set-account', component: _import('form/account'), name: 'setAccount', meta: { title: 'setAccount', icon: 'table' }}
     ]
   },
 

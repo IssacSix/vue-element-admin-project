@@ -180,6 +180,12 @@ $light_gray:#eee;
       background: url('https://www.simboss.com/images/logo.png') no-repeat left 45%;
       background-size: 100% auto;
     }
+  }
+  .l-row {
+    max-width: 1200px;
+    min-width: 1140px;
+    margin: 0 auto;
+    position: relative;
     .title--high {
       margin-bottom: 100px;
     }
@@ -193,12 +199,6 @@ $light_gray:#eee;
       padding: 25px 0 15px;
       padding-left: 20px;
     }
-  }
-  .l-row {
-    max-width: 1200px;
-    min-width: 1140px;
-    margin: 0 auto;
-    position: relative;
   }
   .login-form {
     position: absolute;
@@ -263,6 +263,9 @@ $light_gray:#eee;
     padding-top: 15px;
     font-size: 13px;
     color: #555;
+    a:hover {
+      text-decoration: underline;
+    }
   }
   .sign__link {
     padding-top: 15px;
