@@ -92,6 +92,30 @@ export const asyncRouterMap = [
   },
 
   {
+    path: '/cardManage',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'cardManage',
+    meta: {
+      title: 'cardManage',
+      icon: 'cardManage'
+    },
+    children: [
+      { path: 'cardList', component: _import('card-manage/cardList'), name: 'cardList', meta: { title: 'cardList' }},
+      { path: 'dataZone', component: _import('card-manage/dataZone'), name: 'dataZone', meta: { title: 'dataZone' }}
+    ]
+  },
+
+  {
+    path: '/finance',
+    component: Layout,
+    alwaysShow: true,
+    meta: { title: 'finance', icon: 'finance' },
+    redirect: 'noredirect',
+    children: [{ path: 'accountBalance', component: _import('finance/accountBalance'), name: 'accountBalance', meta: { title: 'accountBalance' }}]
+  },
+
+  {
     path: '/components',
     component: Layout,
     redirect: 'noredirect',
