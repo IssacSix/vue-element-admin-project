@@ -43,9 +43,9 @@
               </div>
 
               <div class="setting-box" v-show="activeName === 'pwd'">
-                <el-form :model="pwdForm" :rules="pwdRule" ref="pwdForm" label-width="100px" class="el-form--label-left">
+                <el-form :model="pwdForm" :rules="pwdRules" ref="pwdForm" label-width="100px" class="demo-ruleForm">
                   <el-form-item label="原密码" prop="oldPass">
-                    <el-input v-model.number="pwdForm.oldPass"></el-input>
+                    <el-input type="password" v-model.number="pwdForm.oldPass"></el-input>
                   </el-form-item>
                   <el-form-item label="密码" prop="pass">
                     <el-input type="password" v-model="pwdForm.pass" auto-complete="off"></el-input>
@@ -54,7 +54,7 @@
                     <el-input type="password" v-model="pwdForm.checkPass" auto-complete="off"></el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="changePwd('pwdForm')">确认修改</el-button>
+                    <el-button type="primary" @click="changePwd('pwdForm')">提交</el-button>
                   </el-form-item>
                 </el-form>
               </div>
@@ -69,7 +69,7 @@
                     </div>
                     <div>提交后可免费申请测试卡</div>
                   </div>
-                  <el-form :model="quality.icForm" ref="pwdForm" label-width="160px" class="quality__ic--form el-form--label-left">
+                  <el-form :model="quality.icForm" label-width="160px" class="quality__ic--form el-form--label-left">
                     <el-form-item label="企业全称">
                       <el-input v-model.trim="quality.icForm.companyName" placeholder="企业全称"></el-input>
                     </el-form-item>
@@ -101,7 +101,7 @@
                     </div>
                     <div>提交后可购买正式卡</div>
                   </div>
-                  <el-form :model="quality.ipForm" ref="pwdForm" :rules="quality.ipRule" label-width="160px" class="quality__ic--form el-form--label-left">
+                  <el-form :model="quality.ipForm" :rules="quality.ipRule" label-width="160px" class="quality__ic--form el-form--label-left">
                     <el-form-item label="法人身份证号码">
                       <el-input v-model.trim="quality.ipForm.id" placeholder="法人身份证号码"></el-input>
                     </el-form-item>
@@ -129,14 +129,11 @@
   </div>
 </template>
 <script>
-  import { queryAccountInfo, modifyAccountInfo } from '@/api/home'
+  import { queryAccountInfo, modifyAccountInfo, modifyPassword } from '@/api/home'
   export default {
     data() {
       var validateOldPass = (rule, value, callback) => {
         value ? callback() : callback(new Error('请输入密码'))
-      }
-      var validateId = (rule, value, callback) => {
-        value ? callback() : callback(new Error('请输入法人身份证号码'))
       }
       var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -157,13 +154,11 @@
           callback()
         }
       }
+      var validateId = (rule, value, callback) => {
+        value ? callback() : callback(new Error('请输入法人身份证号码'))
+      }
       return {
         activeName: 'pwd',
-        pwdForm: {
-          oldPass: '',
-          pass: '',
-          checkPass: ''
-        },
         baseSaveFlag: true,
         baseForm: {
           userAccount: '',
@@ -183,15 +178,20 @@
             { required: true, message: '地址不能为空', trigger: 'blur' }
           ]
         },
-        pwdRule: {
+        pwdForm: {
+          pass: '',
+          checkPass: '',
+          oldPass: ''
+        },
+        pwdRules: {
+          oldPass: [
+            { validator: validateOldPass, trigger: 'blur' }
+          ],
           pass: [
             { validator: validatePass, trigger: 'blur' }
           ],
           checkPass: [
             { validator: validatePass2, trigger: 'blur' }
-          ],
-          oldPass: [
-            { validator: validateOldPass, trigger: 'blur' }
           ]
         },
         quality: {
@@ -226,7 +226,7 @@
             if (valid) {
               modifyAccountInfo(_this.baseForm).then(res => {
                 _this.$message({
-                  message: '恭喜你，这是一条成功消息',
+                  message: '修改成功',
                   type: 'success'
                 })
                 this.baseSaveFlag = true
@@ -251,11 +251,15 @@
         })
       },
       changePwd(formName) {
-        console.log(formName)
+        const _this = this
         this.$refs[formName].validate((valid) => {
-          console.log(valid)
           if (valid) {
-            alert('submit!')
+            modifyPassword(_this.pwdForm).then(res => {
+              _this.$message({
+                message: '修改成功',
+                type: 'success'
+              })
+            })
           } else {
             console.log('error submit!!')
             return false
