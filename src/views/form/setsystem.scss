@@ -727,9 +727,9 @@ li {
 }
 
 .app .el-form .el-form-item.is-required .el-form-item__label:before {
-  height: 0;
+ /*  height: 0;
   content: "";
-  margin-right: 0
+  margin-right: 0 */
 }
 
 .app .el-form .el-form-item {
@@ -744,8 +744,8 @@ li {
   height: 30px;
   line-height: 30px;
   font-size: 14px;
-  padding: 0 10px;
-  background: #f0f0f0;
+  /* padding: 0 10px;
+  background: #f0f0f0; */
   color: #666;
   margin-top: 2px
 }

@@ -158,7 +158,7 @@
         value ? callback() : callback(new Error('请输入法人身份证号码'))
       }
       return {
-        activeName: 'pwd',
+        activeName: 'user',
         baseSaveFlag: true,
         baseForm: {
           userAccount: '',
@@ -255,6 +255,9 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             modifyPassword(_this.pwdForm).then(res => {
+              _this.pwdForm.pass = ''
+              _this.pwdForm.checkPass = ''
+              _this.pwdForm.oldPass = ''
               _this.$message({
                 message: '修改成功',
                 type: 'success'

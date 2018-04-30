@@ -15,13 +15,6 @@
                     <div class="el-tabs__item is-active">自动续费</div>
                   </div>
                 </div>
-                <!-- <div class="resize-triggers">
-                  <div class="expand-trigger">
-                    <div style="width: 151px; height: 51px;">
-                    </div>
-                  </div>
-                  <div class="contract-trigger"></div>
-                </div> -->
               </div>
             </div>
 
@@ -53,19 +46,37 @@
             </div>
             <div class="operation__btn">
               <el-button type="primary" @click="openPay.visible = true">开启自动续费</el-button>
-              <el-button type="default">关闭自动续费</el-button>
+              <el-button type="default" @click="openPay.visible = true">关闭自动续费</el-button>
             </div>
             <el-dialog
               title="批量开启自动续费"
               :visible.sync="openPay.visible"
-              size="small"
-              :before-close="handleClose">
+              size="small">
               <el-input type="textarea" v-model="openPay.ICCID" placeholder="可以直接复制excel中整列ICCID；手动输入多个ICCID，一行一个；"></el-input>
               <span slot="footer" class="dialog-footer">
                 <el-button @click="openPay.visible = false">取 消</el-button>
-                <el-button type="primary" @click="openPay.visible = false">下一步</el-button>
+                <el-button type="primary" @click="openAutoPay()">下一步</el-button>
               </span>
             </el-dialog>
+            
+            <el-dialog title="开启自动续费" :visible.sync="openPayNext.visible" size="small">
+              <el-form class="dialog-form" :model="openPayNext.form">
+                <el-form-item class="is-required" label="活动名称" label-width="120px">
+                  <div class="iccid__box"><span class="recharge__invalid">无卡片</span></div>
+                  <p class="el-form-item__content--hint"><span>当前有效ICCID共0个</span><span class="el-tooltip item"><i class="iconfont"></i></span></p>
+                </el-form-item>
+                <el-form-item label-width="120px">
+                  <el-checkbox-group v-model="openPayNext.form.agree">
+                    <el-checkbox label="我已确认物联网卡自动续费规则" name="agree"></el-checkbox>
+                  </el-checkbox-group>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="openPayNext.visible = false">取 消</el-button>
+                <el-button type="primary" @click="openPayNext.visible = false">确认</el-button>
+              </div>
+            </el-dialog>
+ 
           </div>
         </div>
       </div>
@@ -81,13 +92,28 @@
         openPay: {
           visible: false,
           ICCID: ''
+        },
+        openPayNext: {
+          visible: false,
+          form: {
+            name: '',
+            agree: ''
+          }
         }
       }
     },
     methods: {
-      /* openAutoPay() {
-        this.dialogVisible = true
-      }, */
+      openAutoPay() {
+        if (this.openPay.ICCID) {
+          this.openPay.visible = false
+          this.openPayNext.visible = true
+        } else {
+          this.$message({
+            message: '您没有输入任何信息',
+            type: 'warning'
+          })
+        }
+      },
       handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
