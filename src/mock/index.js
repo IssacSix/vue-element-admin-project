@@ -19,6 +19,7 @@ Mock.mock(/\/home\/mobileData/, 'get', homeAPI.mobileData)
 
 // 设置相关
 Mock.mock(/\/user\/queryAccountInfo/, 'get', homeAPI.accountInfo)
+Mock.mock(/\/user\/modifyAccountInfo/, 'post', '')
 
 // 文章相关
 Mock.mock(/\/article\/list/, 'get', articleAPI.getList)

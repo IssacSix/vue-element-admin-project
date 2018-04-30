@@ -52,23 +52,20 @@
               <div class="operation__tips">本月将自动续费0张卡，预计扣除0元</div>
             </div>
             <div class="operation__btn">
-              <button type="button" class="el-button el-button--primary"><!----><!----><span>开启自动续费</span></button>
-              <button type="button" class="el-button el-button--default"><!----><!----><span>关闭自动续费</span></button>
+              <el-button type="primary" @click="openPay.visible = true">开启自动续费</el-button>
+              <el-button type="default">关闭自动续费</el-button>
             </div>
-            <div class="el-dialog__wrapper" style="display: none;">
-              <div class="el-dialog el-dialog--small" style="top: 15%;">
-                <div class="el-dialog__header"><span class="el-dialog__title">批量开启自动续费</span>
-                  <button type="button" aria-label="Close" class="el-dialog__headerbtn"><i
-                    class="el-dialog__close el-icon el-icon-close"></i></button>
-                </div><!----><!----></div>
-            </div>
-            <div class="el-dialog__wrapper" style="display: none;">
-              <div class="el-dialog el-dialog--small" style="top: 15%;">
-                <div class="el-dialog__header"><span class="el-dialog__title">开启自动续费</span>
-                  <button type="button" aria-label="Close" class="el-dialog__headerbtn"><i
-                    class="el-dialog__close el-icon el-icon-close"></i></button>
-                </div><!----><!----></div>
-            </div>
+            <el-dialog
+              title="批量开启自动续费"
+              :visible.sync="openPay.visible"
+              size="small"
+              :before-close="handleClose">
+              <el-input type="textarea" v-model="openPay.ICCID" placeholder="可以直接复制excel中整列ICCID；手动输入多个ICCID，一行一个；"></el-input>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="openPay.visible = false">取 消</el-button>
+                <el-button type="primary" @click="openPay.visible = false">下一步</el-button>
+              </span>
+            </el-dialog>
           </div>
         </div>
       </div>
@@ -78,7 +75,27 @@
 <script>
   export default {
     name: 'system-setting',
-    components: {}
+    components: {},
+    data() {
+      return {
+        openPay: {
+          visible: false,
+          ICCID: ''
+        }
+      }
+    },
+    methods: {
+      /* openAutoPay() {
+        this.dialogVisible = true
+      }, */
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done()
+          })
+          .catch(_ => {})
+      }
+    }
   }
 </script>
 <style rel="stylesheet/scss" lang="scss">

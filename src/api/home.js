@@ -15,3 +15,10 @@ export function queryAccountInfo() {
     params: ''
   })
 }
+export function modifyAccountInfo(params) {
+  return request({
+    url: '/user/modifyAccountInfo',
+    method: 'post',
+    params: ''
+  })
+}

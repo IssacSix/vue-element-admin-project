@@ -165,7 +165,7 @@ export const asyncRouterMap = [
   },
 
   {
-    path: '/form',
+    path: '/set',
     component: Layout,
     redirect: 'noredirect',
     name: 'form',
@@ -174,7 +174,6 @@ export const asyncRouterMap = [
       icon: 'form'
     },
     children: [
-      { path: 'create-form', component: _import('form/create'), name: 'createForm', meta: { title: 'createForm', icon: 'table' }},
       { path: 'set-system', component: _import('form/system'), name: 'systemSetting', meta: { title: 'systemSetting', icon: 'table' }},
       { path: 'set-account', component: _import('form/account'), name: 'setAccount', meta: { title: 'setAccount', icon: 'table' }}
     ]

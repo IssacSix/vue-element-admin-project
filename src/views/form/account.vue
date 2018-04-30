@@ -17,38 +17,29 @@
             <div class="page__content--box">
 
               <div class="setting-box" v-show="activeName === 'user'">
-                <div class="el-form pal-form-detail el-form--label-left">
-                  <div class="el-form-item"><label class="el-form-item__label" style="width: 100px;">账号</label>
-                    <div class="el-form-item__content" style="margin-left: 100px;">
-                      18969121159
-                    </div>
-                  </div>
-                  <div class="el-form-item"><label class="el-form-item__label" style="width: 100px;">公司名称</label>
-                    <div class="el-form-item__content" style="margin-left: 100px;">
-                      大华
-                    </div>
-                  </div>
-                  <div class="el-form-item"><label class="el-form-item__label" style="width: 100px;">联系电话</label>
-                    <div class="el-form-item__content" style="margin-left: 100px;">
-                      18969121159
-                    </div>
-                  </div>
-                  <div class="el-form-item"><label class="el-form-item__label" style="width: 100px;">联系邮箱</label>
-                    <div class="el-form-item__content" style="margin-left: 100px;">
-
-                    </div>
-                  </div>
-                  <div class="el-form-item"><label class="el-form-item__label" style="width: 100px;">地址</label>
-                    <div class="el-form-item__content" style="margin-left: 100px;">
-                      杭州市滨江区大华技术股份有限公司
-                    </div>
-                  </div>
-                </div>
-                <div class="el-form-item">
-                  <div class="el-form-item__content" style="margin-left: 100px;">
-                    <button type="button" class="el-button el-button--primary"><span>修改</span></button>
-                  </div>
-                </div>
+                <el-form :model="baseForm" :rules="baseRules" ref="baseForm" label-width="100px" class="pal-form-detail el-form--label-left">
+                  <el-form-item label="账号">
+                    {{ baseForm.userAccount }}
+                  </el-form-item>
+                  <el-form-item label="公司名称">
+                    {{ baseForm.orgName }}
+                  </el-form-item>
+                  <el-form-item label="联系电话" prop="phone">
+                    <div v-if="baseSaveFlag">{{ baseForm.phone }}</div>
+                    <el-input v-else type="tel" v-model="baseForm.phone" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="联系邮箱" prop="email">
+                    <div v-if="baseSaveFlag">{{ baseForm.email }}</div>
+                    <el-input v-else type="email" v-model="baseForm.email" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="地址" prop="address">
+                    <div v-if="baseSaveFlag">{{ baseForm.address }}</div>
+                    <el-input v-else v-model="baseForm.address" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="baseSave('baseForm')">{{ baseSaveFlag ? '修改' : '保存' }}</el-button>
+                  </el-form-item>
+                </el-form>
               </div>
 
               <div class="setting-box" v-show="activeName === 'pwd'">
@@ -63,7 +54,7 @@
                     <el-input type="password" v-model="pwdForm.checkPass" auto-complete="off"></el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button type="primary" @click="submitForm('pwdForm')">确认修改</el-button>
+                    <el-button type="primary" @click="changePwd('pwdForm')">确认修改</el-button>
                   </el-form-item>
                 </el-form>
               </div>
@@ -138,7 +129,7 @@
   </div>
 </template>
 <script>
-  import { queryAccountInfo } from '@/api/home'
+  import { queryAccountInfo, modifyAccountInfo } from '@/api/home'
   export default {
     data() {
       var validateOldPass = (rule, value, callback) => {
@@ -167,11 +158,30 @@
         }
       }
       return {
-        activeName: 'user',
+        activeName: 'pwd',
         pwdForm: {
           oldPass: '',
           pass: '',
           checkPass: ''
+        },
+        baseSaveFlag: true,
+        baseForm: {
+          userAccount: '',
+          orgName: '',
+          phone: '',
+          email: '',
+          address: ''
+        },
+        baseRules: {
+          phone: [
+            { required: true, message: '联系电话不能为空', trigger: 'blur' }
+          ],
+          email: [
+            { required: true, message: '联系电话不能为空', trigger: 'blur' }
+          ],
+          address: [
+            { required: true, message: '地址不能为空', trigger: 'blur' }
+          ]
         },
         pwdRule: {
           pass: [
@@ -209,17 +219,41 @@
       this.getAccountInfo()
     },
     methods: {
+      baseSave(formName) {
+        const _this = this
+        if (!this.baseSaveFlag) {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              modifyAccountInfo(_this.baseForm).then(res => {
+                _this.$message({
+                  message: '恭喜你，这是一条成功消息',
+                  type: 'success'
+                })
+                this.baseSaveFlag = true
+              })
+            } else {
+              console.log('error submit!!')
+              return false
+            }
+          })
+        } else {
+          this.baseSaveFlag = false
+        }
+      },
       handleClick(tab, event) {
         console.log(this.activeName)
       },
       getAccountInfo() {
-        // const _this = this
+        const _this = this
         queryAccountInfo().then(res => {
-          console.log(res)
+          console.log(res.data.data)
+          _this.baseForm = res.data.data
         })
       },
-      submitForm(formName) {
+      changePwd(formName) {
+        console.log(formName)
         this.$refs[formName].validate((valid) => {
+          console.log(valid)
           if (valid) {
             alert('submit!')
           } else {
