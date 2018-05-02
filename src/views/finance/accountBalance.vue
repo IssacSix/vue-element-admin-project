@@ -1,11 +1,11 @@
 <template>
   <div class="finance">
     <div class="page__header"><div class="page__header--title">账户余额</div></div>
-    <div class="page__content">
+    <div class="page__content" v-loading="loading">
       <div class="account__balance account__balance--box">
         <div class="balance__show">
-          <span title="点击可更新数据" class="balance__show--wait" @click="refreshBalance()">当前余额<span class="balance__show--amount">0</span>元</span>
-          <el-button size="medium" plain class="balance__show--btn" @click="reminder = true">余额提醒</el-button>
+          <span title="点击可更新数据" class="balance__show--wait" @click="refreshBalance()">当前余额<span class="balance__show--amount">{{balance}}</span>元</span>
+          <el-button size="medium" plain class="balance__show--btn" @click="openReminder">余额提醒</el-button>
         </div> 
         <div class="balance__table">
           <div class="balance__table--header">
@@ -13,7 +13,6 @@
           </div> 
           <el-table
             :data="tableData"
-            v-loading="loading"
             border
             style="width: 100%">
               <el-table-column
@@ -53,7 +52,7 @@
             :current-page="currentPage"
             :page-size="pageSize"
             layout="total, prev, pager, next, jumper"
-            :total="totalPages">
+            :total="total">
           </el-pagination>
         </div>   
       </div>
@@ -64,67 +63,88 @@
           <span class="alarm__title">余额提醒</span><el-switch v-model="form.hasOpenReminder" on-text="开启" off-text="关闭"></el-switch>
         </div>
         <el-form-item>
-          账户余额低于:<div class="el-input-number el-input-number--small is-without-controls alarm__input"><el-input v-model="form.money" min="0" max="Infinity" size="small" :disabled="!form.hasOpenReminder"></el-input></div>元进行通知
+          账户余额低于:<div class="el-input-number el-input-number--small is-without-controls alarm__input"><el-input v-model="form.fatalThreshold" min="0" max="Infinity" size="small" :disabled="!form.hasOpenReminder"></el-input></div>元进行通知
         </el-form-item>
         <div class="alarm__title">通知设置</div>
-        <div>免费发送短信到对应手机号码<button type="button" class="el-button el-button--text"><span>&nbsp;&nbsp;&nbsp;&nbsp;去设置</span></button></div>
+        <div>免费发送短信到对应手机号码<button type="button" class="el-button el-button--text"><span @click="toSet">&nbsp;&nbsp;&nbsp;&nbsp;去设置</span></button></div>
       </el-form>
       <div slot="footer" class="footer">
-        <el-button @click="reminder = false">取 消</el-button><el-button type="primary" @click="reminder = false">确 定</el-button>
+        <el-button @click="reminder = false">取 消</el-button><el-button type="primary" @click="submitReminder">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import { getCurrentBalance, getBalanceNotify, balanceNotifySave, getTransactionRecord } from '@/api/home'
 export default {
   name: 'accountBalance',
   data() {
     return {
-      totalPages: 0,
+      total: 0,
       currentPage: 0,
-      pageSize: 0,
+      pageSize: 20,
       loading: false,
       tableData: [],
       reminder: false,
       form: {
         hasOpenReminder: false,
-        money: 5
-      }
+        fatalThreshold: 5
+      },
+      balance: 0
     }
   },
   created() {
-    // this.tableData = [{
-    //   date: '2016-05-02',
-    //   type: '手机',
-    //   number: '1111111',
-    //   amount: '1312313',
-    //   balance: '1111'
-    // }, {
-    //   date: '2016-05-02',
-    //   type: '手机',
-    //   number: '1111111',
-    //   amount: '1312313',
-    //   balance: '1111'
-    // }, {
-    //   date: '2016-05-02',
-    //   type: '手机',
-    //   number: '1111111',
-    //   amount: '1312313',
-    //   balance: '1111'
-    // }, {
-    //   date: '2016-05-02',
-    //   type: '手机',
-    //   number: '1111111',
-    //   amount: '1312313',
-    //   balance: '1111'
-    // }]
+    this.getBalance()
+    this.getTable(1)
   },
   methods: {
-    refreshBalance() {
-      console.log('refreshBalance')
+    getTable(curPage) {
+      const that = this
+      this.loading = true
+      getTransactionRecord({
+        currentPage: curPage,
+        rowsPerPage: 20
+      }).then(res => {
+        that.total = res.data.data.page.allCount
+        that.loading = false
+      })
     },
-    handleCurrentChange() {
-      console.log('11')
+    getBalance() {
+      const that = this
+      getCurrentBalance().then(res => {
+        that.balance = res.data.data.balance
+      })
+    },
+    refreshBalance() {
+      this.getBalance()
+    },
+    getBalanceNotify() {
+      const that = this
+      getBalanceNotify().then((res) => {
+        that.form.fatalThreshold = res.data.data.fatalThreshold
+        const status = res.data.data.status.toLowerCase()
+        that.form.hasOpenReminder = status === 'active'
+      })
+    },
+    openReminder() {
+      this.getBalanceNotify()
+      this.reminder = true
+    },
+    toSet() {
+      this.$router.push('/form/set-account')
+    },
+    submitReminder() {
+      const that = this
+      const status = this.form.hasOpenReminder === true ? 'ACTIVE' : 'DEACTIVE'
+      balanceNotifySave({
+        status: status,
+        fatalThreshold: 5
+      }).then((res) => {
+        that.reminder = false
+      })
+    },
+    handleCurrentChange(val) {
+      this.getTable(val)
     }
   }
 }
