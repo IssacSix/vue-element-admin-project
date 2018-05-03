@@ -4,6 +4,7 @@
       mode="vertical"
       :collapse-transition="false"
       :show-timeout="200"
+      :theme="'dark'"
       :default-active="$route.path"
       :collapse="isCollapse"
       background-color="#304156"

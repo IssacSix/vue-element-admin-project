@@ -1,5 +1,6 @@
 <template>
   <div class="menu-wrapper">
+    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <template v-for="item in routes" v-if="!item.hidden&&item.children">
 
       <router-link v-if="hasOneShowingChildren(item.children) && !item.children[0].children&&!item.alwaysShow" :to="item.path+'/'+item.children[0].path"
@@ -34,6 +35,8 @@
 
 <script>
 import { generateTitle } from '@/utils/i18n'
+import { mapGetters } from 'vuex'
+import Hamburger from '@/components/Hamburger'
 
 export default {
   name: 'SidebarItem',
@@ -46,7 +49,18 @@ export default {
       default: false
     }
   },
+  computed: {
+    ...mapGetters([
+      'sidebar'
+    ])
+  },
+  components: {
+    Hamburger
+  },
   methods: {
+    toggleSideBar() {
+      this.$store.dispatch('toggleSideBar')
+    },
     hasOneShowingChildren(children) {
       const showingChildren = children.filter(item => {
         return !item.hidden
