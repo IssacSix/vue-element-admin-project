@@ -30,8 +30,8 @@
                   <el-popover
                     ref="popover1"
                     placement="bottom"
-                    title="标题"
-                    width="200"
+                    title="筛选条件"
+                    width="120"
                     trigger="click">
                     <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange">
                       <el-checkbox v-for="item in items" :label="item.value" :key="item.value">{{item.name}}</el-checkbox>
