@@ -60,10 +60,20 @@
             </el-dialog>
             
             <el-dialog title="开启自动续费" :visible.sync="openPayNext.visible" size="small">
-              <el-form class="dialog-form" :model="openPayNext.form">
-                <el-form-item class="is-required" label="活动名称" label-width="120px">
-                  <div class="iccid__box"><span class="recharge__invalid">无卡片</span></div>
-                  <p class="el-form-item__content--hint"><span>当前有效ICCID共0个</span><span class="el-tooltip item"><i class="iconfont"></i></span></p>
+              <el-form class="dialog-form" :model="openPayNext.form" :rules="openPayNextRule">
+                <el-form-item label="ICCID" label-width="120px" prop="agree">
+                  <div class="iccid__box">
+                    <span class="recharge__invalid" v-if="openPayNext.aviliabelCard.length <= 0">无卡片</span>
+                    <span class="" v-else v-for="item in openPayNext.aviliabelCard">{{ item }}</span>
+                  </div>
+                  <p class="el-form-item__content--hint">
+                    <span>当前有效ICCID共{{ openPayNext.aviliabelCard.length }}个</span>
+                      <el-tooltip v-if="openPayNext.unAviliabelCard.length > 0" class="item" effect="dark" :content="`${openPayNext.unAviliabelCard.length}张非法ICCID`" placement="right">
+                        <i class="iconfont"></i>
+                      </el-tooltip>
+                    </span>
+                  </p>
+                  <div class="el-form-item__error" v-show="openPayNext.form.idFlag">请至少选择一个可用的ICCID</div>
                 </el-form-item>
                 <el-form-item label-width="120px">
                   <el-checkbox-group v-model="openPayNext.form.agree">
@@ -73,10 +83,9 @@
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="openPayNext.visible = false">取 消</el-button>
-                <el-button type="primary" @click="openPayNext.visible = false">确认</el-button>
+                <el-button type="primary" @click="openPayNextBtn()">确认</el-button>
               </div>
             </el-dialog>
- 
           </div>
         </div>
       </div>
@@ -84,10 +93,14 @@
   </div>
 </template>
 <script>
+  import { validateAutoRechargeDevice, validateAutoRechargeSubmit } from '@/api/home'
   export default {
     name: 'system-setting',
     components: {},
     data() {
+      var validateAgree = (rule, value, callback) => {
+        this.openPayNext.aviliabelCard.length > 0 ? callback() : callback(new Error('请至少选择一个可用的ICCID'))
+      }
       return {
         openPay: {
           visible: false,
@@ -95,18 +108,30 @@
         },
         openPayNext: {
           visible: false,
+          tip: '',
+          unAviliabelCard: [],
+          aviliabelCard: [],
           form: {
-            name: '',
-            agree: ''
+            agree: '',
+            idFlag: false
           }
+        },
+        openPayNextRule: {
+          agree: [
+            { validator: validateAgree }
+          ]
         }
       }
+    },
+    mounted() {
+      this.getIccidCard()
     },
     methods: {
       openAutoPay() {
         if (this.openPay.ICCID) {
           this.openPay.visible = false
           this.openPayNext.visible = true
+          this.getIccidCard()
         } else {
           this.$message({
             message: '您没有输入任何信息',
@@ -114,12 +139,29 @@
           })
         }
       },
-      handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done()
+      openPayNextBtn() {
+        if (!this.openPayNext.form.agree) {
+          this.$message({
+            message: '请先勾选物联网卡自动续费规则',
+            type: 'warning'
           })
-          .catch(_ => {})
+        } else {
+          if (this.openPayNext.aviliabelCard <= 0) {
+            this.openPayNext.form.idFlag = true
+          } else {
+            validateAutoRechargeSubmit().then(res => {
+              this.openPayNext.visible = false
+            })
+          }
+        }
+      },
+      getIccidCard() {
+        const _this = this
+        validateAutoRechargeDevice().then(res => {
+          console.log(res.data.data)
+          _this.openPayNext.unAviliabelCard = res.data.data.failed
+          _this.openPayNext.aviliabelCard = res.data.data.success
+        })
       }
     }
   }
@@ -131,6 +173,9 @@
   }
   .app-main {
     background: none;
+  }
+  .el-form-item__label {
+    font-weight: normal !important;
   }
 </style>
 

@@ -36,7 +36,7 @@
                     {{ item.type }}<span class="quantity__title--number">{{ item.num }}</span>
                   </div>
                   <div class="quantity__content">
-                    <div class="quantity__content--box" id="cmccCount" style="-webkit-tap-highlight-color: transparent; user-select: none; position: relative; background: transparent;" _echarts_instance_="ec_1524378499825">
+                    <div class="quantity__content--box" id="cmccCount">
                        <pie-chart :data-array="item.cards"></pie-chart>
                     </div>
                     <div class="quantity__content--icon cmccIcon"></div>
@@ -58,14 +58,12 @@
                   <div class="home__block--title">流量统计</div>
                 </div>
                 <div class="home__block--content">
-                  <div class="flow__content" id="flowChart" style="-webkit-tap-highlight-color: transparent; user-select: none; background: transparent;" _echarts_instance_="ec_1524378499826">
-                    <div style="position: relative; overflow: hidden; width: 401px; height: 170px; padding: 0px; margin: 0px; border-width: 0px;">
-                      <canvas width="401" height="170" data-zr-dom-id="zr_0" style="position: absolute; left: 0px; top: 0px; width: 401px; height: 170px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas>
-                    </div>
+                  <div class="flow__content">
+                    <BarChart :bar-data="barData"></BarChart>
                   </div>
                 </div>
                 <div class="home__block--footer">
-                  <div class="flow__count">本月总消耗(M):<span class="flow__count--number">0.063</span></div>
+                  <div class="flow__count">本月总消耗(M): <span class="flow__count--number">{{ barData.CMCC + barData.UNICOM + barData.CHINANET }}</span></div>
                 </div>
               </div>
             </div>
@@ -78,24 +76,31 @@
 
 <script>
 import PieChart from './components/PieChart'
-import { getMobileInfoAPI } from '@/api/home'
+import BarChart from './components/BarChart'
+import { getMobileInfoAPI, countMonthlyUsage } from '@/api/home'
 
 export default {
   name: 'dashboard-admin',
   components: {
-    PieChart
+    PieChart,
+    BarChart
   },
   data() {
     return {
       company: '',
       amount: 0,
       storeMoney: 0,
-      mobileInfo: []
+      mobileInfo: [],
+      barData: {
+        CMCC: 0,
+        UNICOM: 0,
+        CHINANET: 0
+      }
     }
   },
   created() {
     this.getMobileInfo()
-    // console.log(this.mobileInfo)
+    this.countMonthlyUsage()
   },
   methods: {
     getMobileInfo() {
@@ -107,11 +112,18 @@ export default {
         _this.storeMoney = res.data.storeMoney
         _this.mobileInfo = res.data.detail
       })
+    },
+    countMonthlyUsage() {
+      const _this = this
+      countMonthlyUsage().then(res => {
+        console.log(res.data)
+        _this.barData = res.data.data
+      })
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import './home.scss'
+  @import './home.scss';
 </style>

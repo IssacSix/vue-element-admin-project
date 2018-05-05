@@ -16,11 +16,16 @@ Mock.mock(/\/user\/info\.*/, 'get', loginAPI.getUserInfo)
 
 // 首页相关
 Mock.mock(/\/home\/mobileData/, 'get', homeAPI.mobileData)
+Mock.mock(/\/home\/countMonthlyUsage/, 'get', homeAPI.countMonthlyUsage)
 
 // 设置相关
 Mock.mock(/\/user\/queryAccountInfo/, 'get', homeAPI.accountInfo)
 Mock.mock(/\/user\/modifyAccountInfo/, 'post', '')
 Mock.mock(/\/user\/modifyPassword/, 'post', '')
+Mock.mock(/\/user\/validateAutoRechargeDevice/, 'post', homeAPI.validateAutoRechargeDevice)
+Mock.mock(/\/user\/validateAutoRechargeSubmit/, 'post', '')
+Mock.mock(/\/user\/eq\/get/, 'get', homeAPI.getEq)
+Mock.mock(/\/user\/eq\/update/, 'post', '')
 
 // 文章相关
 Mock.mock(/\/article\/list/, 'get', articleAPI.getList)

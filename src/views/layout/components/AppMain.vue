@@ -24,5 +24,8 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   .app-main {
     background-color: #f4f4f4;
+    .app__content--wrapper {
+      overflow-y: auto;
+    }
   }
 </style>

@@ -10,7 +10,7 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
+          <router-link to="/set/set-account">
             <el-dropdown-item>
               账户设置
             </el-dropdown-item>
@@ -44,7 +44,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+        location.reload() // In order to re-instantiate the vue-router object to avoid bugs
       })
     }
   }
@@ -75,12 +75,6 @@ export default {
   height: 50px;
   line-height: 50px;
   border-radius: 0px !important;
-  .hamburger-container {
-    line-height: 58px;
-    height: 50px;
-    float: left;
-    padding: 0 10px;
-  }
   .breadcrumb-container{
     float: left;
   }

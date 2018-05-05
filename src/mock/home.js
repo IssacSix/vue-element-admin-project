@@ -49,5 +49,53 @@ export default {
       },
       'success': true
     }
+  },
+  validateAutoRechargeDevice: () => {
+    return {
+      'message': '获取账户信息成功',
+      'data': {
+        'success': ['89860401101730496779'],
+        'failed': ['89860401101730496779']
+      },
+      'success': true
+    }
+  },
+  countMonthlyUsage: () => {
+    return {
+      'message': '获取账户信息成功',
+      'data': {
+        'CHINANET': 100,
+        'CMCC': 200,
+        'UNICOM': 0
+      },
+      'success': true
+    }
+  },
+  /* getEq: () => {
+    return {
+      'message': '获取企业资质成功',
+      'data': null,
+      'success': true
+    }
+  } */
+  getEq: () => {
+    return {
+      'message': '获取企业资质成功',
+      'data': {
+        id: 2996,
+        idCardNum: '23',
+        idCardPicBack: '',
+        idCardPicFont: 'http://paiwo.co/static/images/gallery/portrait.jpg',
+        legalEntityStatus: 'not-audit',
+        licence: '1',
+        licencePic: 'http://paiwo.co/static/images/gallery/portrait.jpg',
+        name: '哈哈哈',
+        orgId: 9430,
+        orgName: '',
+        status: 'not-audit'
+      },
+      'success': true
+    }
   }
 }
+

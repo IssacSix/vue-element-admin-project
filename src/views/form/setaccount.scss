@@ -784,7 +784,8 @@ li {
 }
 
 .app .el-form .el-form-item .el-form-item__label {
-    color: #666
+    color: #666;
+    font-weight: normal;
 }
 
 .app .el-form .el-form-item .el-form-item__content .el-form-item__content--hint {
@@ -9169,7 +9170,6 @@ img[data-v-33c5ad8c] {
     float: none;
     display: inline-block;
     text-align: left;
-    padding: 0 0 10px
 }
 
 .el-form--inline .el-form-item {
@@ -9224,7 +9224,6 @@ img[data-v-33c5ad8c] {
     font-size: 14px;
     color: #48576a;
     line-height: 1;
-    padding: 11px 12px 11px 0;
     box-sizing: border-box
 }
 

@@ -4,10 +4,10 @@
 
 <script>
 import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+require('echarts/theme/macarons')
 import { debounce } from '@/utils'
 
-const animationDuration = 6000
+const animationDuration = 5000
 
 export default {
   props: {
@@ -17,17 +17,30 @@ export default {
     },
     width: {
       type: String,
-      default: '100%'
+      default: '30%'
     },
     height: {
       type: String,
-      default: '300px'
+      default: '100%'
+    },
+    barData: {
+      type: Object
     }
   },
   data() {
     return {
       chart: null
     }
+  },
+  watch: {
+    barData: {
+      handler(newVal) {
+        this.initChart()
+      },
+      deep: true
+    }
+  },
+  created() {
   },
   mounted() {
     this.initChart()
@@ -48,8 +61,8 @@ export default {
   },
   methods: {
     initChart() {
+      const _data = this.barData
       this.chart = echarts.init(this.$el, 'macarons')
-
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
@@ -58,7 +71,7 @@ export default {
           }
         },
         grid: {
-          top: 10,
+          top: 40,
           left: '2%',
           right: '2%',
           bottom: '3%',
@@ -66,38 +79,41 @@ export default {
         },
         xAxis: [{
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['移动', '联通', '电信'],
+          axisLine: {
+            show: false
+          },
+          axisLabel: {
+            color: '#5A6164',
+            fontSize: '12'
+          },
           axisTick: {
-            alignWithLabel: true
+            show: false,
+            alignWithLabel: false
           }
         }],
         yAxis: [{
-          type: 'value',
-          axisTick: {
-            show: false
-          }
+          show: false
         }],
         series: [{
-          name: 'pageA',
           type: 'bar',
           stack: 'vistors',
-          barWidth: '60%',
-          data: [79, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageB',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [80, 52, 200, 334, 390, 330, 220],
-          animationDuration
-        }, {
-          name: 'pageC',
-          type: 'bar',
-          stack: 'vistors',
-          barWidth: '60%',
-          data: [30, 52, 200, 334, 390, 330, 220],
-          animationDuration
+          barWidth: '80%',
+          legendHoverLink: false,
+          data: [_data.CMCC, _data.UNICOM, _data.CHINANET],
+          animationDuration,
+          label: {
+            normal: {
+              show: true,
+              position: 'top',
+              color: '#333'
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#248eff'
+            }
+          }
         }]
       })
     }

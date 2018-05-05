@@ -8,6 +8,14 @@ export function getMobileInfoAPI() {
   })
 }
 
+export function countMonthlyUsage() {
+  return request({
+    url: '/home/countMonthlyUsage',
+    method: 'get',
+    params: ''
+  })
+}
+
 export function queryAccountInfo() {
   return request({
     url: '/user/queryAccountInfo',
@@ -27,6 +35,38 @@ export function modifyAccountInfo(params) {
 export function modifyPassword(params) {
   return request({
     url: '/user/modifyPassword',
+    method: 'post',
+    params: ''
+  })
+}
+
+export function validateAutoRechargeDevice() {
+  return request({
+    url: '/user/validateAutoRechargeDevice',
+    method: 'post',
+    params: ''
+  })
+}
+
+export function validateAutoRechargeSubmit() {
+  return request({
+    url: '/user/validateAutoRechargeSubmit',
+    method: 'post',
+    params: ''
+  })
+}
+
+export function getEq() {
+  return request({
+    url: '/user/eq/get',
+    method: 'get',
+    params: ''
+  })
+}
+
+export function updateEq() {
+  return request({
+    url: '/user/eq/update',
     method: 'post',
     params: ''
   })
