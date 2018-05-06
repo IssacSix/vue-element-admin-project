@@ -40,7 +40,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/home'),
       name: 'dashboard',
-      meta: { title: '首页', icon: 'dashboard', noCache: true }
+      meta: { title: '首页', icon: '&#xe628;', noCache: true }
     }]
   }
 ]
@@ -52,23 +52,6 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  /* {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/index',
-    meta: { roles: ['admin'] }, // you can set roles in root nav
-    children: [{
-      path: 'index',
-      component: _import('permission/index'),
-      name: 'permission',
-      meta: {
-        title: 'permission',
-        icon: 'lock',
-        roles: ['admin'] // or you can only set roles in sub nav
-      }
-    }]
-  },
-  */
   {
     path: '/cardManage',
     component: Layout,
@@ -76,7 +59,7 @@ export const asyncRouterMap = [
     name: 'cardManage',
     meta: {
       title: '卡片管理',
-      icon: 'cardManage'
+      icon: '&#xe6e7;'
     },
     children: [
       { path: 'cardList', component: _import('card-manage/cardList'), name: 'cardList', meta: { title: '卡片列表' }},
@@ -88,35 +71,10 @@ export const asyncRouterMap = [
     path: '/finance',
     component: Layout,
     alwaysShow: true,
-    meta: { title: '财务', icon: 'finance' },
+    meta: { title: '财务', icon: '&#xe618;' },
     redirect: 'noredirect',
     children: [{ path: 'accountBalance', component: _import('finance/accountBalance'), name: 'accountBalance', meta: { title: '账户余额' }}]
   },
-  /*
-  {
-    path: '/components',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'component-demo',
-    meta: {
-      title: 'components',
-      icon: 'component'
-    },
-    children: [
-      { path: 'tinymce', component: _import('components-demo/tinymce'), name: 'tinymce-demo', meta: { title: 'tinymce' }},
-      { path: 'markdown', component: _import('components-demo/markdown'), name: 'markdown-demo', meta: { title: 'markdown' }},
-      { path: 'json-editor', component: _import('components-demo/jsonEditor'), name: 'jsonEditor-demo', meta: { title: 'jsonEditor' }},
-      { path: 'dnd-list', component: _import('components-demo/dndList'), name: 'dndList-demo', meta: { title: 'dndList' }},
-      { path: 'splitpane', component: _import('components-demo/splitpane'), name: 'splitpane-demo', meta: { title: 'splitPane' }},
-      { path: 'avatar-upload', component: _import('components-demo/avatarUpload'), name: 'avatarUpload-demo', meta: { title: 'avatarUpload' }},
-      { path: 'dropzone', component: _import('components-demo/dropzone'), name: 'dropzone-demo', meta: { title: 'dropzone' }},
-      { path: 'sticky', component: _import('components-demo/sticky'), name: 'sticky-demo', meta: { title: 'sticky' }},
-      { path: 'count-to', component: _import('components-demo/countTo'), name: 'countTo-demo', meta: { title: 'countTo' }},
-      { path: 'mixin', component: _import('components-demo/mixin'), name: 'componentMixin-demo', meta: { title: 'componentMixin' }},
-      { path: 'back-to-top', component: _import('components-demo/backToTop'), name: 'backToTop-demo', meta: { title: 'backToTop' }},
-      { path: 'drag-dialog', component: _import('components-demo/dragDialog'), name: 'dragDialog-demo', meta: { title: 'dragDialog' }}
-    ]
-  }, */
   {
     path: '/set',
     component: Layout,
@@ -124,64 +82,12 @@ export const asyncRouterMap = [
     name: 'form',
     meta: {
       title: '设置',
-      icon: 'form'
+      icon: '&#xe7f6;'
     },
     children: [
-      { path: 'set-system', component: _import('form/system'), name: 'systemSetting', meta: { title: '系统设置' }},
-      { path: 'set-account', component: _import('form/account'), name: 'setAccount', meta: { title: '账户设置' }}
+      { path: 'set-system', component: _import('setting/system'), name: 'systemSetting', meta: { title: '系统设置' }},
+      { path: 'set-account', component: _import('setting/account'), name: 'setAccount', meta: { title: '账户设置' }}
     ]
   },
-
-  /* {
-    path: '/error',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'errorPages',
-    meta: {
-      title: 'errorPages',
-      icon: '404'
-    },
-    children: [
-      { path: '401', component: _import('errorPage/401'), name: 'page401', meta: { title: 'page401', noCache: true }},
-      { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: 'page404', noCache: true }}
-    ]
-  },
-
-  {
-    path: '/error-log',
-    component: Layout,
-    redirect: 'noredirect',
-    children: [{ path: 'log', component: _import('errorLog/index'), name: 'errorLog', meta: { title: 'errorLog', icon: 'bug' }}]
-  }, */
-
-  /* {
-    path: '/zip',
-    component: Layout,
-    redirect: '/zip/download',
-    alwaysShow: true,
-    meta: { title: 'zip', icon: 'zip' },
-    children: [{ path: 'download', component: _import('zip/index'), name: 'exportZip', meta: { title: 'exportZip' }}]
-  }, */
-
-  /* {
-    path: '/theme',
-    component: Layout,
-    redirect: 'noredirect',
-    children: [{ path: 'index', component: _import('theme/index'), name: 'theme', meta: { title: 'theme', icon: 'theme' }}]
-  }, */
-
-  /* {
-    path: '/clipboard',
-    component: Layout,
-    redirect: 'noredirect',
-    children: [{ path: 'index', component: _import('clipboard/index'), name: 'clipboardDemo', meta: { title: 'clipboardDemo', icon: 'clipboard' }}]
-  }, */
-
-  /* {
-    path: '/i18n',
-    component: Layout,
-    children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
-  }, */
-
   { path: '*', redirect: '/404', hidden: true }
 ]

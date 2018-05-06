@@ -6,7 +6,7 @@
             <div class="home__block--header">
               <span class="home__block--title home__left--title">{{ company }}</span>
                 <span><img src="https://simboss-public.oss-cn-hangzhou.aliyuncs.com/palette/static/public/images/nocretify.png" title="企业认证通审核未通过" class="certify certify__pass">
-                <span class="link certify__link">立即认证</span>
+                <router-link to="/set/set-account" class="link certify__link">立即认证</router-link>
               </span>
             </div>
           <div class="home__block--content">
@@ -37,9 +37,9 @@
                   </div>
                   <div class="quantity__content">
                     <div class="quantity__content--box" id="cmccCount">
-                       <pie-chart :data-array="item.cards"></pie-chart>
+                      <div :class="getClass(item.type)"></div>
+                      <pie-chart :data-array="item.cards"></pie-chart>
                     </div>
-                    <div class="quantity__content--icon cmccIcon"></div>
                   </div>
               
                   <div class="quantity__footer">
@@ -119,6 +119,16 @@ export default {
         console.log(res.data)
         _this.barData = res.data.data
       })
+    },
+    getClass(type) {
+      switch (type) {
+        case '移动卡':
+          return 'cmccIcon quantity__content--icon'
+        case '联通卡':
+          return 'unicomIcon quantity__content--icon'
+        default:
+          return 'chinaIcon quantity__content--icon'
+      }
     }
   }
 }

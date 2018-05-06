@@ -15,11 +15,11 @@ export default {
     },
     width: {
       type: String,
-      default: '100%'
+      default: '250px'
     },
     height: {
       type: String,
-      default: '300px'
+      default: '250px'
     },
     dataArray: {
       type: Array

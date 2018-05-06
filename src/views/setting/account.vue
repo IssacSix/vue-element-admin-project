@@ -240,7 +240,7 @@
         }
       }
       return {
-        activeName: 'company',
+        activeName: 'user',
         baseSaveFlag: true,
         baseForm: {
           userAccount: '',
