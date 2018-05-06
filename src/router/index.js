@@ -68,6 +68,31 @@ export const asyncRouterMap = [
       }
     }]
   },
+  */
+  {
+    path: '/cardManage',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'cardManage',
+    meta: {
+      title: '卡片管理',
+      icon: 'cardManage'
+    },
+    children: [
+      { path: 'cardList', component: _import('card-manage/cardList'), name: 'cardList', meta: { title: '卡片列表' }},
+      { path: 'dataZone', component: _import('card-manage/dataZone'), name: 'dataZone', meta: { title: '流量池' }}
+    ]
+  },
+
+  {
+    path: '/finance',
+    component: Layout,
+    alwaysShow: true,
+    meta: { title: '财务', icon: 'finance' },
+    redirect: 'noredirect',
+    children: [{ path: 'accountBalance', component: _import('finance/accountBalance'), name: 'accountBalance', meta: { title: '账户余额' }}]
+  },
+  /*
   {
     path: '/components',
     component: Layout,

@@ -1,6 +1,6 @@
 <template>
   <div class="menu-wrapper">
-    <el-menu-item class="submenu-title-noDropdown">
+    <el-menu-item style="text-align:center" class="submenu-title-noDropdown">
       <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     </el-menu-item>
     <template v-for="item in routes" v-if="!item.hidden&&item.children">

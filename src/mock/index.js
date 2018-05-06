@@ -4,6 +4,7 @@ import homeAPI from './home'
 import articleAPI from './article'
 import remoteSearchAPI from './remoteSearch'
 import transactionAPI from './transaction'
+import cardAPI from './card'
 
 // Mock.setup({
 //   timeout: '350-600'
@@ -39,5 +40,16 @@ Mock.mock(/\/search\/user/, 'get', remoteSearchAPI.searchUser)
 
 // 账单相关
 Mock.mock(/\/transaction\/list/, 'get', transactionAPI.getList)
+Mock.mock(/\/balance\/get/, 'get', transactionAPI.getBalance)
+Mock.mock(/\/balance\/notify\/get/, 'get', transactionAPI.getBalanceNotify)
+Mock.mock(/\/balance\/notify\/save/, 'post', transactionAPI.balanceNotifySave)
+Mock.mock(/\/trade\/list/, 'get', transactionAPI.getTradeList)
+
+// 卡片管理
+Mock.mock(/\/card\/list/, 'get', cardAPI.getCardList)
+Mock.mock(/\/device\/validate/, 'post', cardAPI.renew)
+Mock.mock(/\/card\/verifyAutoRechargeInfo/, 'post', cardAPI.verifyAutoRecharge)
+Mock.mock(/\/card\/updateAutoRecharge/, 'post', cardAPI.updateAutoRecharge)
+Mock.mock(/\/card\/updateUserMemo/, 'post', cardAPI.updateUserMemo)
 
 export default Mock
