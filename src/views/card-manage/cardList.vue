@@ -16,16 +16,77 @@
               <el-input class="search__simple" placeholder="请输入ICCID" v-model="searchVal">
                 <el-button slot="append" icon="search" @click="commonSearch"></el-button>
               </el-input>
-              <el-button icon="search">高级搜索</el-button>
+               <el-popover
+                  ref="popover2"
+                  placement="bottom"
+                  title="高级搜索"
+                  v-model="highSearchPop"
+                  trigger="click">
+                  <el-form ref="highSearchForm" :model="highSearchForm" label-width="88px">
+                    <el-form-item label="ICCID">
+                      <el-input class="little-input" v-model="highSearchForm.iccid_St"></el-input>
+                      -
+                      <el-input class="little-input" v-model="highSearchForm.iccid_Ed"></el-input>
+                    </el-form-item>
+                    <el-form-item label="电话号码">
+                      <el-input v-model="highSearchForm.msisdn"></el-input>
+                    </el-form-item>
+                    <el-form-item label="卡类型">
+                      <el-select class="small-selector" v-model="highSearchForm.type" placeholder="请选择" clearable>
+                        <el-option label="单卡" value="STANDARD,CUSTOM"></el-option>
+                        <el-option label="流量卡池" value="POOL"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="自动续费">
+                      <el-select class="small-selector" v-model="highSearchForm.automaticRechargeCondition" placeholder="请选择" clearable>
+                        <el-option label="是" value="true"></el-option>
+                        <el-option label="否" value="false"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="设备状态">
+                      <el-select class="small-selector" v-model="highSearchForm.status" placeholder="请选择" clearable>
+                        <el-option label="库存" value="level2"></el-option>
+                        <el-option label="已激活" value="activation"></el-option>
+                        <el-option label="已停卡" value="deactivation"></el-option>
+                        <el-option label="可测试" value="testing"></el-option>
+                        <el-option label="已销卡" value="retired"></el-option>
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item label="剩余流量">
+                      <el-input class="little-input" v-model="highSearchForm.surplusDataVolume_St"></el-input>
+                      -
+                      <el-input class="little-input" v-model="highSearchForm.surplusDataVolume_Ed"></el-input>
+                    </el-form-item>
+                    <el-form-item label="过期时间">
+                      <!-- <el-col :span="24"> -->
+                        <el-date-picker
+                          format="yyyy-MM-dd"
+                          v-model="dateValue"
+                          type="daterange"
+                          placeholder="选择时间范围"
+                          clearable>
+                        </el-date-picker>
+                      <!-- </el-col> -->
+                    </el-form-item>  
+                    <el-form-item label="备注">
+                      <el-input v-model="highSearchForm.userMemo"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button @click="clearAll">清空</el-button>
+                      <el-button type="primary" @click="highSearchSubmit">确认</el-button>
+                    </el-form-item>
+                  </el-form>
+                </el-popover>
+              <el-button icon="search" v-popover:popover2>高级搜索</el-button>
               <button type="button" @click="refresh" class="el-button search__icon el-button--default"><span><i class="iconfont"></i></span></button>
-              <button type="button" class="el-button search__icon el-button--default"><span><i class="iconfont f-weight-bold"></i>已销卡</span></button>
+              <button type="button" @click="cardClosed" class="el-button search__icon el-button--default"><span><i class="iconfont f-weight-bold"></i>已销卡</span></button>
               <div class="float-right">
                   <i class="iconfont color-waring"></i><span class="align-middle" style="margin-left: 5px;">移动物联网卡续费操作截止每月</span><span class="f-bold f-size-l6 align-middle">22日</span>
               </div>
             </div>
             <div class="container__bar--tool">
               <el-button type="primary" @click="renew = true">续费</el-button>
-              <el-button @click="autoRenew = true">自动续费</el-button>
+              <el-button @click="clickAutoRenew">自动续费</el-button>
               <div class="float-right">
                   <el-popover
                     ref="popover1"
@@ -33,12 +94,14 @@
                     title="筛选条件"
                     width="120"
                     trigger="click">
-                    <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange">
-                      <el-checkbox v-for="item in items" :label="item.value" :key="item.value">{{item.name}}</el-checkbox>
+                    <el-checkbox-group v-model="checkedItem" @change="handleCheckedItemChange" >
+                      <div class="checklabel" v-for="item in items" :key="item.value">
+                        <el-checkbox :label="item.value" v-show="item.value!=='iccid'">{{item.name}}</el-checkbox>
+                      </div>
                     </el-checkbox-group>
                   </el-popover>
-                  <el-button v-popover:popover1>y</el-button>
-                  <el-button @click="handleDownload">z</el-button>
+                  <el-button icon="my-loudou" v-popover:popover1></el-button>
+                  <el-button icon="my-excel" @click="handleDownload"></el-button>
               </div>
             </div>
             <div class="container__bar--table">
@@ -55,13 +118,23 @@
                     width="28">
                   </el-table-column>
                   <el-table-column
-                    v-for="(item,index) in items"
+                    v-for="(item,index) in items.slice(0,14)"
                     v-if="item.show"
                     :key="index"
                     :prop="item.value"
                     :label="item.name"
                     :width="item.width"
-                    sortable>
+                    :sortable="item.sortable">
+                  </el-table-column>
+                  <el-table-column
+                    v-if="items[14].show"
+                    :prop="items[14].value"
+                    :label="items[14].name"
+                    :width="items[14].width">
+                    <template slot-scope="scope">
+                      <i class="el-icon-edit edit"  @click="handleEdit(scope.row.iccid, scope.row.userMemo)"></i>
+                      <span>{{scope.row.userMemo}}</span>
+                    </template>
                   </el-table-column>
                 </el-table>
                 <el-pagination
@@ -89,6 +162,108 @@
         <el-button @click="renew = false">取消</el-button><el-button type="primary" @click="renewSubmit">下一步</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="续费" class="balance-alarm" :visible.sync="renewMenu">
+      <div class="renewal-panel">
+        <p class="color-666 f-size-l8 margin-bottom20">
+          <span>以下ICCID支持续套餐周期/修改套餐/续费加油包操作，无效或输入错误的ICCID已为你剔除</span>
+        </p>
+        <div class="renewal-panel__body">
+          <div class="body__card disabled">
+            <div class="card__title">
+              <span class="color-333 f-size-l6 bold">续套餐周期</span>
+              <div class="card__title--description">增加物联网卡的套餐周期</div>
+            </div>
+            <div class="card__body">
+              <p class="f-size-l9">没有符合要求的物联网卡</p>
+            </div>
+            <div class="card__body--details">
+              <div class="body__details--inner">
+                <div class="el-scrollbar">
+                  <div class="el-select-dropdown__wrap details__inner--max el-scrollbar__wrap" style="margin-bottom: -17px; margin-right: -17px;">
+                    <ul class="el-scrollbar__view el-select-dropdown__list no-padding" style="position: relative;">
+                      <div class="resize-triggers">
+                        <div class="expand-trigger">
+                          <div style="width: 126px; height: 1px;"></div>
+                        </div>
+                        <div class="contract-trigger"></div>
+                      </div>
+                    </ul>
+                  </div>
+                  <div class="el-scrollbar__bar is-horizontal">
+                    <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+                  </div>
+                  <div class="el-scrollbar__bar is-vertical">
+                    <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="body__card disabled">
+            <div class="card__title">
+              <span class="color-333 f-size-l6 bold">修改套餐</span>
+              <div class="card__title--description">修改套餐将会在当前套餐结束后生效</div>
+            </div>
+            <div class="card__body">
+              <p class="f-size-l9">没有符合要求的物联网卡</p>
+            </div>
+            <div class="card__body--details">
+              <div class="body__details--inner">
+                <div class="el-scrollbar">
+                  <div class="el-select-dropdown__wrap details__inner--max el-scrollbar__wrap" style="margin-bottom: -17px; margin-right: -17px;">
+                    <ul class="el-scrollbar__view el-select-dropdown__list no-padding" style="position: relative;">
+                      <div class="resize-triggers">
+                        <div class="expand-trigger">
+                          <div style="width: 126px; height: 1px;"></div>
+                        </div>
+                        <div class="contract-trigger"></div>
+                      </div>
+                    </ul>
+                  </div>
+                  <div class="el-scrollbar__bar is-horizontal">
+                    <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+                  </div>
+                  <div class="el-scrollbar__bar is-vertical">
+                    <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="body__card disabled">
+            <div class="card__title">
+              <span class="color-333 f-size-l6 bold">续费加油包</span>
+              <div class="card__title--description">续费后立即生效，当月清零</div>
+            </div>
+            <div class="card__body">
+              <p class="f-size-l9">没有符合要求的物联网卡</p>
+            </div>
+            <div class="card__body--details">
+              <div class="body__details--inner">
+                <div class="el-scrollbar">
+                  <div class="el-select-dropdown__wrap details__inner--max el-scrollbar__wrap" style="margin-bottom: -17px; margin-right: -17px;">
+                    <ul class="el-scrollbar__view el-select-dropdown__list no-padding" style="position: relative;">
+                      <div class="resize-triggers">
+                        <div class="expand-trigger">
+                          <div style="width: 126px; height: 1px;"></div>
+                        </div>
+                        <div class="contract-trigger"></div>
+                      </div>
+                    </ul>
+                  </div>
+                  <div class="el-scrollbar__bar is-horizontal">
+                    <div class="el-scrollbar__thumb" style="transform: translateX(0%);"></div>
+                  </div>
+                  <div class="el-scrollbar__bar is-vertical">
+                    <div class="el-scrollbar__thumb" style="transform: translateY(0%);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
     <el-dialog title="自动续费设置" class="balance-alarm" :visible.sync="autoRenew">
       <el-alert
         title="当前为按照查询条件全选模式执行自动续费。"
@@ -101,39 +276,51 @@
         style="width: 100%"
         class="margin-top10">
         <el-table-column
-          prop="number"
+          type="index"
           label="序号"
           min-width="48"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="type"
+          prop="name"
           label="套餐类型"
           min-width="150"
           align="center">
         </el-table-column>
         <el-table-column
-          prop="amount"
+          prop="count"
           label="数量（张）"
           min-width="100"
           align="center">
         </el-table-column>
       </el-table>
-      <p class="hint__content--bar"><span>当前有效ICCID共0个</span></p>
+      <p class="hint__content--bar"><span>当前有效ICCID共{{valideIcNo}}个</span></p>
       <div class="margin-top20">
         <el-checkbox v-model="autoRenewChecked">我已确认
           <el-button type="text" @click="open">物联网卡自动续费规则</el-button>
         </el-checkbox>
       </div>
       <div slot="footer" class="footer2">
-        <el-button type="primary">开启自动续费</el-button><el-button>关闭自动续费</el-button>
+        <el-button type="primary" :disabled="tableDataPop.length===0" @click="autoRenewSubmit(true)">开启自动续费</el-button><el-button  :disabled="tableDataPop.length===0" @click="autoRenewSubmit(false)">关闭自动续费</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="编辑备注" class="balance-alarm small" size="small" :visible.sync="memo">
+      <el-input
+        type="textarea"
+        :rows="4"
+        maxlength=50
+        placeholder="请输入备注信息，字数不超过50"
+        v-model="memoText">
+      </el-input>
+       <div slot="footer" class="footer1">
+        <el-button @click="memo = false">取消</el-button><el-button type="primary" @click="editMemo">确定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCardList } from '@/api/home'
+import { getCardList, renew, verifyAutoRecharge, updateAutoRecharge, updateUserMemo } from '@/api/home'
 import { parseTime } from '@/utils'
 
 export default {
@@ -147,30 +334,59 @@ export default {
       tableData: [],
       renew: false,
       autoRenew: false,
+      renewMenu: false,
       renewVal: '',
       tableDataPop: [],
       autoRenewChecked: false,
       loading: false,
       searchVal: '',
       items: [
-        { name: 'ICCID', value: 'iccid', width: '160', show: true },
-        { name: '电话号码', value: 'msisdn', width: '120', show: true },
-        { name: '卡类型', value: 'type', width: '90', show: true },
-        { name: '自动续费', value: 'autoRenew', width: '120', show: true },
-        { name: '网络状态', value: 'netStatus', width: '90', show: true },
-        { name: '设备状态', value: 'deviceStatus', width: '90', show: true },
-        { name: '本月用量', value: 'currMonthDataUsage', width: '80', show: true },
-        { name: '套餐规格', value: 'ratePlanName', width: '80', show: true },
-        { name: '套餐总量', value: 'totalDataVolume', width: '80', show: true },
-        { name: '套餐已用', value: 'usedDataVolume', width: '80', show: true },
-        { name: '套餐剩余', value: 'lastDataVolume', width: '80', show: true },
-        { name: '最近同步时间', value: 'lastSyncDate', width: '130', show: true },
-        { name: '测试期过期时间', value: 'testingExpireDate', width: '130', show: true },
-        { name: '过期时间', value: 'expireDate', width: '130', show: true },
-        { name: '备注', value: 'userMemo', width: '130', show: true }
+        { name: 'ICCID', value: 'iccid', width: '160', show: true, sortable: true },
+        { name: '电话号码', value: 'msisdn', width: '120', show: true, sortable: false },
+        { name: '卡类型', value: 'type', width: '90', show: true, sortable: false },
+        { name: '自动续费', value: 'automaticRecharge', width: '120', show: true, sortable: false },
+        { name: '网络状态', value: 'gprsStatus', width: '90', show: true, sortable: false },
+        { name: '设备状态', value: 'status', width: '90', show: true, sortable: true },
+        { name: '本月用量', value: 'currMonthDataUsage', width: '80', show: true, sortable: true },
+        { name: '套餐规格', value: 'ratePlanName', width: '80', show: true, sortable: true },
+        { name: '套餐总量', value: 'totalDataVolume', width: '80', show: true, sortable: true },
+        { name: '套餐已用', value: 'usedDataVolume', width: '80', show: true, sortable: true },
+        { name: '套餐剩余', value: 'lastDataVolume', width: '80', show: true, sortable: true },
+        { name: '最近同步时间', value: 'lastSyncDateTime', width: '130', show: true, sortable: true },
+        { name: '测试期过期时间', value: 'testingExpireDateTime', width: '130', show: true, sortable: true },
+        { name: '过期时间', value: 'expireDateTime', width: '130', show: true, sortable: true },
+        { name: '备注', value: 'userMemo', width: '130', show: true, sortable: false }
       ],
-      checkedItem: ['iccid', 'msisdn', 'type', 'autoRenew', 'netStatus', 'deviceStatus', 'currMonthDataUsage', 'ratePlanName', 'totalDataVolume', 'usedDataVolume', 'lastDataVolume', 'lastSyncDate', 'testingExpireDate', 'expireDate', 'userMemo'],
-      multipleSelection: []
+      checkedItem: ['iccid', 'msisdn', 'type', 'automaticRecharge', 'gprsStatus', 'status', 'currMonthDataUsage', 'ratePlanName', 'totalDataVolume', 'usedDataVolume', 'lastDataVolume', 'lastSyncDateTime', 'testingExpireDateTime', 'expireDateTime', 'userMemo'],
+      multipleSelection: [],
+      eysClose: false,
+      valideIcNo: 0,
+      highSearchPop: false,
+      highSearchForm: {
+        msisdn: '',
+        status: '',
+        type: '',
+        automaticRechargeCondition: '',
+        userMemo: '',
+        excludeRetired: '',
+        surplusDataVolume_St: '',
+        surplusDataVolume_Ed: '',
+        expireDate_St: '',
+        expireDate_Ed: '',
+        iccid_St: '',
+        iccid_Ed: ''
+      },
+      dateValue: '',
+      cardStatus: {
+        level2: '库存',
+        activation: '已激活',
+        deactivation: '已停卡',
+        testing: '可测试',
+        retired: '已销卡'
+      },
+      memo: false,
+      memoText: '',
+      editIccid: ''
     }
   },
   created() {
@@ -180,27 +396,51 @@ export default {
     commonSearch() {
       this.getList(1, 'cmcc')
     },
-    getList(curPage, carrier) {
+    getList(curPage = 1, carrier = 'cmcc') {
       this.loading = true
-      getCardList({
-        excludeRetired: false,
+      let params = {
+        excludeRetired: this.eyeClose, // 销卡
         currentPage: curPage,
         rowsPerPage: this.pageSize,
         carrier: carrier,
         iccid_St: this.serachVal
-      }).then(res => {
+      }
+      params = Object.assign(params, this.highSearchForm)
+      getCardList(params).then(res => {
         console.log(res)
-        this.allCount = res.data.data.page.allCount
+        this.total = res.data.data.page.allCount
         this.tableData = res.data.data.list
-        this.tableData.map(i => {
+        this.tableData.forEach(i => {
+          i['type'] = i['type'].toLowerCase() === 'standard' ? '单卡' : ''
+          i['automaticRecharge'] = i['automaticRecharge'] ? '是' : '否'
+          i['gprsStatus'] = i['gprsStatus'].toLowerCase() === 'activated_name' ? '开启' : ''
+          i['status'] = this.cardStatus[i.status]
+          i['currMonthDataUsage'] = Number(i['currMonthDataUsage']) === 0 ? '0M' : i['currMonthDataUsage'].toFixed(3) + 'M'
+          var active = i['physicalStatus'] === 'ACTIVATION_READY_NAME' ? '未激活' : ''
+          i['ratePlanName'] = i['ratePlanName'] === '' ? '0M(' + active + ')' : i['ratePlanName']
+          i['totalDataVolume'] = Number(i['totalDataVolume']) === 0 ? '0M' : i['totalDataVolume'] && i['totalDataVolume'].toFixed(3) + 'M'
+          i['usedDataVolume'] = Number(i['usedDataVolume']) === 0 ? '0M' : i['usedDataVolume'] && i['usedDataVolume'].toFixed(3) + 'M'
+          i['lastDataVolume'] = Number(i['lastDataVolume']) === 0 ? '0M' : i['lastDataVolume'] && i['lastDataVolume'].toFixed(3) + 'M'
+          i['lastSyncDateTime'] = i['lastSyncDate'] ? parseTime(i['lastSyncDate'].time) : ''
+          console.log(i['testingExpireDate'])
+          i['testingExpireDateTime'] = i['testingExpireDate'] ? parseTime(i['testingExpireDate'].time) : ''
+          i['expireDateTime'] = i['expireDate'] ? parseTime(i['expireDate'].time) : ''
         })
         this.loading = false
       })
     },
     renewSubmit() {
       if (this.renewVal === '') {
-        this.openWarn()
+        this.openWarn('renew')
+        return
       }
+      renew({
+        iccids: this.renewVal
+      }).then(res => {
+        this.renewVal = ''
+        console.log(res.data.success)
+        this.renewMenu = true
+      })
     },
     open() {
       const h = this.$createElement
@@ -220,11 +460,84 @@ export default {
         showConfirmButton: false
       })
     },
-    openWarn() {
+    openWarn(val) {
+      if (val === 'renew') {
+        this.$message({
+          message: '您没有输入任何信息',
+          type: 'warning'
+        })
+        return
+      }
+      if (val === 'autoRenew') {
+        this.$message({
+          message: '请确认物联网卡自动续费规则',
+          type: 'warning'
+        })
+        return
+      }
+    },
+    openSuccess(val) {
       this.$message({
-        message: '您没有输入任何信息',
-        type: 'warning'
+        message: val,
+        type: 'success'
       })
+      return
+    },
+    clickAutoRenew() {
+      this.tableDataPop = []
+      this.autoRenewChecked = false
+      this.autoRenew = true
+      verifyAutoRecharge({
+        excludeRetired: this.eyeClose,
+        carrier: this.carrier
+      }).then(res => {
+        console.log('dadasdasdsdad')
+        const table = res.data.data
+        for (var key in table) {
+          this.valideIcNo += table[key].count
+          if (table[key].count > 0) {
+            this.tableDataPop.push(table[key])
+          }
+        }
+      })
+    },
+    autoRenewSubmit(val) {
+      console.log(val)
+      if (!this.autoRenewChecked) {
+        this.openWarn('autoRenew')
+        return
+      }
+      updateAutoRecharge({
+        excludeRetired: this.eyeClose,
+        carrier: this.carrier,
+        isAutoRecharge: val
+      }).then(res => {
+        if (res.data.success) {
+          const msg = val === true ? '开启自动续费成功' : '关闭自动续费成功'
+          this.openSuccess(msg)
+          this.autoRenew = false
+        }
+      })
+    },
+    clearAll() {
+      for (var key in this.highSearchForm) {
+        this.highSearchForm[key] = ''
+      }
+    },
+    highSearchSubmit() {
+      if (this.dateValue) {
+        this.highSearchForm.expireDate_St = this.dateFormant(this.dateValue[0]) + ' 00:00:00'
+        this.highSearchForm.expireDate_Ed = this.dateFormant(this.dateValue[1]) + ' 23:59:59'
+        console.log(this.highSearchForm.expireDate_St)
+      }
+      this.highSearchPop = false
+      this.getList()
+    },
+    dateFormant(val) {
+      var year = val.getFullYear()
+      var month = parseInt(val.getMonth()) + 1 > 9 ? parseInt(val.getMonth()) + 1 : '0' + (parseInt(val.getMonth()) + 1)
+      var day = val.getDate()
+      return year + '-' + month + '-' + day
     },
     handleCheckedItemChange(value) {
       this.items.map(i => {
@@ -237,8 +550,30 @@ export default {
         return i
       })
     },
+    handleEdit(iccid, memo) {
+      console.log('edit!')
+      this.memo = true
+      this.editIccid = iccid
+      this.memoText = memo
+    },
+    editMemo() {
+      updateUserMemo({
+        iccid: this.editIccid,
+        memo: this.memoText
+      }).then(res => {
+        if (res.data.success) {
+          this.openSuccess('备注编辑成功')
+          this.memo = false
+          this.getList()
+        }
+      })
+    },
     refresh() {
       this.getList(1, 'cmcc')
+    },
+    cardClosed() {
+      this.eyeClose = !this.eyeClose
+      this.getList(this.currentPage, this.activeName)
     },
     handleCurrentChange(val) {
       this.getList(val, 'cmcc')
@@ -284,117 +619,6 @@ export default {
 }
 </script>
 
-<style>
-@import url('../dashboard/home.scss');
-.cardList {
-    box-sizing: content-box;
-    background: transparent;
-}
-.cardList .page__header {
-    padding: 0 10px;
-    background-color: #fff;
-}
-.cardList .page__header--title {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    position: relative;
-    height: 50px;
-    font-size: 16px;
-}
-.cardList .page__header--title:after {
-    content: " ";
-    width: 100%;
-    display: inline-block;
-    position: absolute;
-    bottom: 5px;
-    left: 0;
-    border-bottom: 1px solid #ebebeb;
-}
-.cardList .page__header--content {
-    padding-left: 10px;
-    height: 50px!important;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    background: #fff;
-}
-.cardList .el-tabs__header{
-    margin: 0!important;
-}
-.cardList .el-tabs__active-bar {
-    width: 150px!important;
-}
-.cardList .el-tabs .el-tabs__item {
-    width: 150px;
-    text-align: center;
-    font-size: 16px;
-    height: 50px;
-    line-height: 50px;
-}
-.cardList .page__content {
-    padding: 10px;
-}
-.cardList .page__content--box {
-    padding: 20px;
-    background-color: #fff;
-    min-height: calc(100vh - 212px);
-}
-.cardList .page__content .container__bar--search {
-    width: 100%;
-    margin-bottom: 20px;
-}
-.cardList .container__bar--search .search__simple {
-    width: 300px;
-    margin-right: 10px;
-}
-.cardList .page__content .container__bar--tool {
-    height: 38px;
-    background: #f5f8fa;
-    padding: 7px 0 7px 10px;
-    margin-bottom: 10px;
-}
-.cardList .footer1 {
-    margin-top: -20px;
-    padding-bottom: 15px;
-}
-.cardList .footer2 {
-    margin-top: -40px;
-    padding-bottom: 15px;
-}
-.cardList .el-dialog.el-dialog--small {
-    width: 60%!important;
-}
-.cardList .hint__content--bar {
-    height: 30px;
-    line-height: 30px;
-    font-size: 14px;
-    padding: 0 10px;
-    background: #f0f0f0;
-    color: #666;
-    margin-top: 2px;
-}
-.agreement {
-    padding: 0 0 20px!important;
-}
-.cardList .el-message-box__message p {
-    line-height: 1.4;
-    margin: 0px;
-}
-.cardList .agreement p {
-    text-indent: 20px;
-    font-size: 15px;
-    padding-bottom: 10px;
-    line-height: 1.4;
-    color: rgb(102, 102, 102);
-}
+<style lang='scss'>
+@import url('./card.scss');
 </style>

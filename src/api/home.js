@@ -65,3 +65,26 @@ export function renew(params) {
     params: params
   })
 }
+
+export function verifyAutoRecharge(params) {
+  return request({
+    url: '/card/verifyAutoRechargeInfo',
+    method: 'post',
+    params: params
+  })
+}
+
+export function updateAutoRecharge(params) {
+  return request({
+    url: '/card/updateAutoRecharge',
+    method: 'post',
+    params: params
+  })
+}
+export function updateUserMemo(params) {
+  return request({
+    url: '/card/updateUserMemo',
+    method: 'post',
+    params: params
+  })
+}

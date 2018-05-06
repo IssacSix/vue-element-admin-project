@@ -41,5 +41,8 @@ Mock.mock(/\/trade\/list/, 'get', transactionAPI.getTradeList)
 // 卡片管理
 Mock.mock(/\/card\/list/, 'get', cardAPI.getCardList)
 Mock.mock(/\/device\/validate/, 'post', cardAPI.renew)
+Mock.mock(/\/card\/verifyAutoRechargeInfo/, 'post', cardAPI.verifyAutoRecharge)
+Mock.mock(/\/card\/updateAutoRecharge/, 'post', cardAPI.updateAutoRecharge)
+Mock.mock(/\/card\/updateUserMemo/, 'post', cardAPI.updateUserMemo)
 
 export default Mock
