@@ -96,7 +96,6 @@
 
 <script>
 import { realName } from '@/api/home'
-import { parseTime } from '@/utils'
 
 export default {
   data() {
@@ -150,7 +149,7 @@ export default {
       this.loading = true
       let params = {
         currentPage: 1, // 销卡
-        currentPage: 20
+        currentItem: 20
       }
       params = Object.assign(params, this.highSearchForm)
       realName(params).then(res => {
