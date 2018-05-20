@@ -430,7 +430,4 @@
 </script>
 <style rel="stylesheet/scss" lang="scss">
   @import 'setaccount.scss';
-  .el-form-item__label {
-    padding: 0;
-  }
 </style>
