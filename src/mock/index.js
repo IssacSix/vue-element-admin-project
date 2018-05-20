@@ -27,6 +27,7 @@ Mock.mock(/\/user\/validateAutoRechargeDevice/, 'post', homeAPI.validateAutoRech
 Mock.mock(/\/user\/validateAutoRechargeSubmit/, 'post', '')
 Mock.mock(/\/user\/eq\/get/, 'get', homeAPI.getEq)
 Mock.mock(/\/user\/eq\/update/, 'post', '')
+Mock.mock(/\/realName\/search/, 'get', '')
 
 // 文章相关
 Mock.mock(/\/article\/list/, 'get', articleAPI.getList)

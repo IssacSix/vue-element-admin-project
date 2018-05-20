@@ -137,10 +137,19 @@ export function updateAutoRecharge(params) {
     params: params
   })
 }
+
 export function updateUserMemo(params) {
   return request({
     url: '/card/updateUserMemo',
     method: 'post',
+    params: params
+  })
+}
+
+export function realName(params) {
+  return request({
+    url: 'realName/search',
+    method: 'get',
     params: params
   })
 }

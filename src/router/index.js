@@ -86,7 +86,8 @@ export const asyncRouterMap = [
     },
     children: [
       { path: 'set-system', component: _import('setting/system'), name: 'systemSetting', meta: { title: '系统设置' }},
-      { path: 'set-account', component: _import('setting/account'), name: 'setAccount', meta: { title: '账户设置' }}
+      { path: 'set-account', component: _import('setting/account'), name: 'setAccount', meta: { title: '账户设置' }},
+      { path: 'set-identify', component: _import('setting/identify'), name: 'setIdentify', meta: { title: '实名认证' }}
     ]
   },
   { path: '*', redirect: '/404', hidden: true }
