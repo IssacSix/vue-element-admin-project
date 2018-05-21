@@ -44,6 +44,8 @@ Mock.mock(/\/balance\/get/, 'get', transactionAPI.getBalance)
 Mock.mock(/\/balance\/notify\/get/, 'get', transactionAPI.getBalanceNotify)
 Mock.mock(/\/balance\/notify\/save/, 'post', transactionAPI.balanceNotifySave)
 Mock.mock(/\/trade\/list/, 'get', transactionAPI.getTradeList)
+Mock.mock(/\/invoice\/list/, 'post', transactionAPI.getInvoiceList)
+Mock.mock(/\/invoice\/item\/list/, 'post', transactionAPI.getInvoiceItemList)
 
 // 卡片管理
 Mock.mock(/\/card\/list/, 'get', cardAPI.getCardList)

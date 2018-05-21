@@ -15415,3 +15415,27 @@ label {
     line-height: 240px;
     text-align: center;
 }
+.quality-form .el-input input {
+    width: 380px;
+}
+.footer1 {
+    margin-top: -20px;
+    padding-bottom: 15px;
+}
+.el-dialog__body {
+    color: #48576a;
+    font-size: 14px;
+}
+.el-checkbox {
+    color: #1f2d3d;
+}
+.invoice-apply__body--board-content {
+    line-height: 27px;
+    padding: 11px;
+}
+.show_down {
+    line-height: 20px!important; 
+    left:0; 
+    top:36px; 
+    z-index: 5000;
+}
