@@ -73,7 +73,10 @@ export const asyncRouterMap = [
     alwaysShow: true,
     meta: { title: '财务', icon: '&#xe618;' },
     redirect: 'noredirect',
-    children: [{ path: 'accountBalance', component: _import('finance/accountBalance'), name: 'accountBalance', meta: { title: '账户余额' }}]
+    children: [
+      { path: 'accountBalance', component: _import('finance/accountBalance'), name: 'accountBalance', meta: { title: '账户余额' }},
+      { path: 'invoiceApplication', component: _import('finance/invoiceApplication'), name: 'invoiceApplication', meta: { title: '发票申请' }}
+    ]
   },
   {
     path: '/set',
