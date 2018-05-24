@@ -158,9 +158,9 @@
               <el-input v-model="qualityForm.bankAccount" placeholder="开户账号，请与《银行开户许可证》上保持一致"></el-input>
             </el-form-item>
             <el-form-item label="上传证件照">
-              <upload-image title="营业执照" tid="img1" @getImg="getImg" :errorProp="errorText[0]"></upload-image>
-              <upload-image title="税务登记证" tid="img2" @getImg="getImg" :errorProp="errorText[1]"></upload-image>
-              <upload-image title="纳税人资格证" tid="img3" @getImg="getImg" :errorProp="errorText[2]">
+              <upload-image title="营业执照" tid="img1" @get-img="getImg" :errorText="errorText.img1"></upload-image>
+              <upload-image title="税务登记证" tid="img2" @get-img="getImg" :errorText="errorText.img2"></upload-image>
+              <upload-image title="纳税人资格证" tid="img3" @get-img="getImg" :errorText="errorText.img3">
                 <el-tooltip class="item" effect="dark" placement="left" slot="tip">
                   <div slot="content">没有一般纳税人证书，您可以提供以下任意证件：<br>
                     1.盖有“增值税一般纳税人”章的税务登记证副本；<br>
@@ -172,7 +172,7 @@
                   <i class="iconfont f-size-l7 align-middle el-tooltip"></i>
                 </el-tooltip> 
               </upload-image>
-              <upload-image title="银行开户许可证" tid="img4" @getImg="getImg" :errorProp="errorText[3]"></upload-image>
+              <upload-image title="银行开户许可证" tid="img4" @get-img="getImg" :errorText="errorText.img4"></upload-image>
               <p class="color-666 f-size-l9"><span>格式要求：</span>支持.jpg/.jpeg/.png格式图片，每张图片大小不超过5M</p>
             </el-form-item>
             <el-form-item>
@@ -383,7 +383,12 @@ export default {
       showError: false,
       hasCompanyInfo: false,
       image: [{ tid: 'img1', result: '', title: '营业执照' }, { tid: 'img2', result: '', title: '税务登记证' }, { tid: 'img3', result: '', title: '纳税人资格证' }, { tid: 'img4', result: '', title: '银行开户许可证' }],
-      errorText: ['', '', '', ''],
+      errorText: {
+        img1: '',
+        img2: '',
+        img3: '',
+        img4: ''
+      },
       isReverse: false,
       showDown: false,
       cities: [],
@@ -459,10 +464,9 @@ export default {
     qualitySubmit(formName) {
       this.image.forEach((i, index) => {
         if (i.result === '') {
-          this.errorText[index] = '请上传' + i.title
-        //   console.log(this.errorText[index])
+          this.errorText[i.tid] = '请上传' + i.title
         } else {
-          this.errorText[index] = ''
+          this.errorText[i.tid] = ''
         }
       })
       this.$refs[formName].validate((valid) => {
@@ -476,6 +480,7 @@ export default {
     getImg(val) {
       const i = val.tid.substring(3)
       this.image[i - 1].result = val.result
+      this.errorText[val.tid] = ''
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
@@ -493,7 +498,7 @@ export default {
       this.keyIndex2 = index2
       this.cityItem = cities[this.keyIndex1].sheng[this.keyIndex2].city
       this.cityShow = true
-      this.sheng=name
+      this.sheng = name
     },
     preventClick() {
       console.log('just prevent')
@@ -503,6 +508,9 @@ export default {
       this.showDown = false
       this.cityShow = false
       this.addressForm.district = this.sheng + '/' + name
+    },
+    showError(val) {
+      this.errorText[val.tid] = val.text
     }
   }
 }

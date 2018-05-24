@@ -12,7 +12,7 @@
         <p class="img-inputer__change">{{canEdit ? '点击上传' : '编辑后可修改'}}</p>
       </div> 
       <input type="file" :id="tid" @change="addImg" accept="image/jpg,image/gif,image/png,image/jpeg,image/bmp;" capture="video" class="img-inputer__inputer"> 
-      <div class="img-inputer__err">{{errorText ? errorText : errorProp}}</div>
+      <div class="img-inputer__err">{{errorTextOrigin!=='' ? errorTextOrigin : errorText}}</div>
     </div> 
     <p>
       <span>{{title}}</span>
@@ -29,7 +29,7 @@ export default {
         result: '',
         name: ''
       },
-      errorText: ''
+      errorTextOrigin: ''
     }
   },
   props: {
@@ -43,7 +43,7 @@ export default {
       type: Boolean,
       default: true
     },
-    errorProp: {
+    errorText: {
       type: String,
       default: ''
     }
@@ -57,14 +57,19 @@ export default {
       console.log(e.target.files)
       const imgFile = e.target.files[0]
       if (!/image\/\w+/.test(imgFile.type)) {
-        this.errorText = '请选择正确类型的文件'
+        this.errorTextOrigin = '请选择正确类型文件'
+        setTimeout(() => {
+          this.errorTextOrigin = ''
+        })
         return
       }
       if (imgFile.size >= 5 * 1024 * 1024) {
-        this.errorText = '文件大小不能超过5M'
+        this.errorTextOrigin = '文件大小不能超过5M'
+        setTimeout(() => {
+          this.errorTextOrigin = ''
+        }, 2000)
         return
       }
-      this.errorText = ''
       const reader = new FileReader()
       reader.readAsDataURL(imgFile)
       const that = this
@@ -72,7 +77,7 @@ export default {
       reader.onloadend = function() {
         that.image.result = reader.result
         that.image.name = imgFile.name
-        that.$emit('getImg', { tid: that.tid, result: that.image.result, title: that.title })
+        that.$emit('get-img', { tid: that.tid, result: that.image.result, title: that.title })
       }
     }
   }
