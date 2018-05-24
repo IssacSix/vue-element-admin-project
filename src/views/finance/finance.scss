@@ -5561,15 +5561,6 @@ screen and (-ms-high-contrast:active) {
     src: url(//at.alicdn.com/t/font_181097_4cfof91wgs2u766r.eot#iefix) format("embedded-opentype"), url(//at.alicdn.com/t/font_181097_4cfof91wgs2u766r.woff) format("woff"), url(//at.alicdn.com/t/font_181097_4cfof91wgs2u766r.ttf) format("truetype"), url(//at.alicdn.com/t/font_181097_4cfof91wgs2u766r.svg#iconfont) format("svg")
 }
 
-/* @font-face {
-    font-family: 'iconfont'; 
-    src: url('//at.alicdn.com/t/font_654991_ksgrwq4reqjxxbt9.eot');
-    src: url('//at.alicdn.com/t/font_654991_ksgrwq4reqjxxbt9.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_654991_ksgrwq4reqjxxbt9.woff') format('woff'),
-    url('//at.alicdn.com/t/font_654991_ksgrwq4reqjxxbt9.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_654991_ksgrwq4reqjxxbt9.svg#iconfont') format('svg');
-} */
-
 .iconfont {
     font-family: iconfont !important;
     font-size: 16px;
@@ -14191,11 +14182,11 @@ img[data-v-33c5ad8c] {
     font-size: 12px
 }
 
-// .el-input,
-// .el-input__inner {
-//     width: 100%;
-//     display: inline-block
-// }
+.el-input,
+.el-input__inner {
+    width: 100%;
+    display: inline-block
+}
 
 .el-color-picker__panel {
     position: absolute;
@@ -15337,15 +15328,15 @@ img[data-v-33c5ad8c] {
 .el-transfer-panel__filter .el-icon-circle-close {
     cursor: pointer
 }
-.cardList {
+.invoiceApplication {
     box-sizing: content-box;
     background: transparent;
 }
-.cardList .page__header {
+.invoiceApplication .page__header {
     padding: 0 10px;
     background-color: #fff;
 }
-.cardList .page__header--title {
+.invoiceApplication .page__header--title {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -15356,7 +15347,7 @@ img[data-v-33c5ad8c] {
     height: 50px;
     font-size: 16px;
 }
-.cardList .page__header--title:after {
+.invoiceApplication .page__header--title:after {
     content: " ";
     width: 100%;
     display: inline-block;
@@ -15365,8 +15356,7 @@ img[data-v-33c5ad8c] {
     left: 0;
     border-bottom: 1px solid #ebebeb;
 }
-.cardList .page__header--content {
-    padding-left: 10px;
+.invoiceApplication .page__header--content {
     height: 50px!important;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -15379,145 +15369,73 @@ img[data-v-33c5ad8c] {
     justify-content: space-between;
     background: #fff;
 }
-.cardList .el-tabs__header{
+.invoiceApplication .el-tabs__header{
     margin: 0!important;
+    border-bottom: 0!important;
 }
-.cardList .el-tabs__active-bar {
+.invoiceApplication .el-tabs__active-bar {
     width: 150px!important;
 }
-.cardList .el-tabs .el-tabs__item {
+.invoiceApplication .el-tabs .el-tabs__item {
     width: 150px;
     text-align: center;
     font-size: 16px;
     height: 50px;
     line-height: 50px;
 }
-.cardList .page__content {
+.invoiceApplication .page__content {
     padding: 10px;
 }
-.cardList .page__content--box {
+.invoiceApplication .page__content--box {
     padding: 20px;
     background-color: #fff;
     min-height: calc(100vh - 212px);
 }
-.cardList .page__content .container__bar--search {
+.invoiceApplication .invoice-apply__top {
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ebebeb;
+}
+label {
+    font-weight: 400!important;
+}
+.invoice-apply__body--input {
+    width: 380px!important;
+}
+.el-button.is-selected {
+    color: #20a0ff!important;
+    border-color: #20a0ff!important;
+}
+.invoice-apply__body--board {
     width: 100%;
-    margin-bottom: 20px;
+    height: 240px;
+    background-color: #f5f8fa;
+    border: 1px solid #ccc;
 }
-.cardList .container__bar--search .search__simple {
-    width: 300px;
-    margin-right: 10px;
+.invoice-apply__body--board-none {
+    line-height: 240px;
+    text-align: center;
 }
-.cardList .page__content .container__bar--tool {
-    height: 38px;
-    background: #f5f8fa;
-    padding: 7px 0 7px 10px;
-    margin-bottom: 10px;
+.quality-form .el-input input {
+    width: 380px;
 }
-.cardList .footer1 {
+.footer1 {
     margin-top: -20px;
     padding-bottom: 15px;
 }
-.cardList .footer2 {
-    margin-top: -40px;
-    padding-bottom: 15px;
-}
-.cardList .el-dialog.el-dialog--small {
-    width: 60%!important;
-}
-.cardList .hint__content--bar {
-    height: 30px;
-    line-height: 30px;
+.el-dialog__body {
+    color: #48576a;
     font-size: 14px;
-    padding: 0 10px;
-    background: #f0f0f0;
-    color: #666;
-    margin-top: 2px;
 }
-.agreement {
-    padding: 0 0 20px!important;
+.el-checkbox {
+    color: #1f2d3d;
 }
-.cardList .el-message-box__message p {
-    line-height: 1.4;
-    margin: 0px;
+.invoice-apply__body--board-content {
+    line-height: 27px;
+    padding: 11px;
 }
-.cardList .agreement p {
-    text-indent: 20px;
-    font-size: 15px;
-    padding-bottom: 10px;
-    line-height: 1.4;
-    color: rgb(102, 102, 102);
-}
-label{
-  font-weight: 400!important;
-}
-.renewal-panel .renewal-panel__body {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    width: 100%;
-}
-.renewal-panel .renewal-panel__body .body__card.disabled {
-    background-color: #eef1f6;
-    border-color: #d1dbe5;
-    color: #bbb;
-}
-.renewal-panel .renewal-panel__body .body__card .card__title {
-    min-height: 90px;
-}
-.renewal-panel .renewal-panel__body .body__card .card__title .card__title--description {
-    margin-top: 20px;
-}
-.renewal-panel .renewal-panel__body .body__card .card__body {
-    margin-top: 40px;
-}
-.renewal-panel .renewal-panel__body .body__card .card__body--details {
-    position: absolute;
-    margin: 0 -20px;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid #ebebeb;
-}
-.el-scrollbar {
-    overflow: hidden;
-    position: relative;
-}
-.small .el-dialog.el-dialog--small {
-    width: 40%!important;
-}
-.edit:hover{
-    cursor: pointer;
-}
-.little-input {
-    display: inline-block;
-    width: 48%;
-}
-.small-selector {
-    width: 100%;
-}
-.el-date-editor--daterange.el-input {
-    width: 100%;
-}
-@font-face {
-    font-family: 'iconfont';  /* project id 654864 */
-    src: url('//at.alicdn.com/t/font_654864_6xcdj7bfm9oa8aor.eot');
-    src: url('//at.alicdn.com/t/font_654864_6xcdj7bfm9oa8aor.eot?#iefix') format('embedded-opentype'),
-    url('//at.alicdn.com/t/font_654864_6xcdj7bfm9oa8aor.woff') format('woff'),
-    url('//at.alicdn.com/t/font_654864_6xcdj7bfm9oa8aor.ttf') format('truetype'),
-    url('//at.alicdn.com/t/font_654864_6xcdj7bfm9oa8aor.svg#iconfont') format('svg');
-}
-[class^="el-icon-my"], [class*=" el-icon-my"] {
-    font-family:"iconfont" !important;
-    
-    /* 以下内容参照第三方图标库本身的规则 */
-    font-size: 16px;
-    font-style:normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-.el-icon-my-loudou:before {
-    content: '\e603'
-}
-.el-icon-my-excel:before {
-    content: '\e617'
+.show_down {
+    line-height: 20px!important; 
+    left:0; 
+    top:36px; 
+    z-index: 5000;
 }

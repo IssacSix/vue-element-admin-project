@@ -81,5 +81,29 @@ export default {
       'message': '获取交易记录成功',
       'success': true
     }
+  },
+  getInvoiceList() {
+    return {
+      'data': {
+        'list': [],
+        'page': {
+          'allCount': 0,
+          'currentPage': 1,
+          'orderByClause': '',
+          'rowsPerPage': 20,
+          'start': 0,
+          'totalPage': 0
+        }
+      },
+      'message': 'OK',
+      'success': true
+    }
+  },
+  getInvoiceItemList() {
+    return {
+      'data': [],
+      'message': 'OK',
+      'success': true
+    }
   }
 }

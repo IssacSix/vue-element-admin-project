@@ -10,6 +10,7 @@ export default {
     dataZone: 'dataZone',
     finance: 'finance',
     accountBalance: 'accountBalance',
+    invoiceApplication: 'invoiceApplication',
     components: 'Components',
     componentIndex: 'Introduction',
     tinymce: 'Tinymce',

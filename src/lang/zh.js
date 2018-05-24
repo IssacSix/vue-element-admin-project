@@ -10,6 +10,7 @@ export default {
     dataZone: '我的流量池',
     finance: '财务',
     accountBalance: '账户余额',
+    invoiceApplication: '发票申请',
     components: '组件',
     componentIndex: '介绍',
     tinymce: '富文本编辑器',
